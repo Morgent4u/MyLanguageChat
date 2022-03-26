@@ -200,11 +200,11 @@ public class CMD_Language implements CommandExecutor
 								
 								return false;
 							}
-							else if(args[0].equalsIgnoreCase("translate-symbole")) 
+							else if(args[0].equalsIgnoreCase("translate-symbol"))
 							{
 								if(ps.of_hasSetupPermissions()) 
 								{
-									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The translation-symbole has been changed to:§a " + args[1]);
+									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The translation-symbol has been changed to:§a " + args[1]);
 									main.SETTINGS.of_setTranslationSymbol(args[1]);
 								}
 								else 
@@ -250,11 +250,11 @@ public class CMD_Language implements CommandExecutor
 		p.sendMessage("§aShow the user-help:");
 		p.sendMessage("§c/Language help");
 		p.sendMessage("§aEnable or disable the plugin:");
-		p.sendMessage("§c/Language enable/disbale");
+		p.sendMessage("§c/Language enable/disable");
 		p.sendMessage("§aSet the default-language:");
-		p.sendMessage("§c/Language default-language <countrycode>");
-		p.sendMessage("§aSet the translate symbole:");
-		p.sendMessage("§c/Language translate-symbole <symbole>");
+		p.sendMessage("§c/Language default-language <country-code>");
+		p.sendMessage("§aSet the translate symbol:");
+		p.sendMessage("§c/Language translate-symbol <symbol>");
 		p.sendMessage("§aTranslate every message into the users language:");
 		p.sendMessage("§c/Language translate-everything");
 		p.sendMessage("");

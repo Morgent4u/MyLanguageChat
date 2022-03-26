@@ -115,7 +115,7 @@ public class Translation extends Objekt
 				//	Keine Separaten Chats, ein Einheitlicher Chat in einer Sprache!
 				else 
 				{
-					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, main.SETTINGS.of_getDefaultLanguage4NoSparatechat());
+					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, main.SETTINGS.of_getDefaultLanguage4NoSeparateChats());
 					translatedText = chatFormat.replace("%message%", translatedText);
 					
 					for(Spieler ds : players) 
