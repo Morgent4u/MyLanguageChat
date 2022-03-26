@@ -89,7 +89,7 @@ public class MessageService extends Objekt
 		//	Text-Invites
 		Text txt = new Text("txt_cmdhelper4user");
 		
-		if(txt.of_fileExists())
+		if(!txt.of_fileExists())
 		{
 			//	Template:
 			ArrayList<String> texts = new ArrayList<String>();
@@ -112,7 +112,7 @@ public class MessageService extends Objekt
 		
 		txt = new Text("txt_supported_languages");
 		
-		if(txt.of_fileExists())
+		if(!txt.of_fileExists())
 		{
 			//	Template:
 			ArrayList<String> texts = new ArrayList<String>();
