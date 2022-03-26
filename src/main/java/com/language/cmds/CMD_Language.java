@@ -29,6 +29,7 @@ public class CMD_Language implements CommandExecutor
 		{
 			if(sender instanceof Player) 
 			{
+				String helloWorld = "This is a Test....";
 				Spieler ps = main.SPIELERSERVICE.CONTEXT.of_getSpieler(sender.getName());
 				
 				if(ps != null) 
@@ -59,7 +60,6 @@ public class CMD_Language implements CommandExecutor
 								Text txt = new Text("txt_supported_languages", ps.of_getPlayer());
 								txt.of_addReplacement("%p%", ps.of_getName());
 								String[] messages = txt.of_getText();
-								String n = "Test";
 								
 								//	Text auf folgendes Format überprüfen...
 								//  FORMAT=&7%countrycode% - &a%language%
