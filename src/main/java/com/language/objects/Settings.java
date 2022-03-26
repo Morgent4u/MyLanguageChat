@@ -76,8 +76,11 @@ public class Settings extends Objekt
 			defaultLanguage = datei.of_getSetString(sectionKey + ".Settings.DefaultLanguage", "EN").toLowerCase();
 			ib_useVault = datei.of_getSetBoolean(sectionKey + ".Settings.UseVault", true);
 			ib_usePlaceholderAPI = datei.of_getSetBoolean(sectionKey + ".Settings.UsePlaceholderAPI", false);
-			ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
-			
+
+			//	Derzeit deaktiviert:
+			// ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
+			ib_useOwnWebservice = false;
+
 			//	Chat:
 			chatDesign = datei.of_getSetString(sectionKey + ".Chat.Design", "&8[&c%group%&8]&a %p%&7: &f%message%").replace("&", "§");
 			ib_useSeparateChat = !datei.of_getSetBoolean(sectionKey + ".Chat.GlobalTranslatedChat.Use", false);
