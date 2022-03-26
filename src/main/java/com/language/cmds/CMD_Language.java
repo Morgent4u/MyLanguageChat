@@ -29,7 +29,6 @@ public class CMD_Language implements CommandExecutor
 		{
 			if(sender instanceof Player) 
 			{
-				String helloWorld = "This is a Test....";
 				Spieler ps = main.SPIELERSERVICE.CONTEXT.of_getSpieler(sender.getName());
 				
 				if(ps != null) 
