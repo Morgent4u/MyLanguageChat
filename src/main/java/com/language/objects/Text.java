@@ -140,7 +140,7 @@ public class Text extends Objekt
 	public void of_createTemplateFileViaText(ArrayList<String> texts) 
 	{
 		//	Wenn die Datei nicht existiert...
-		if(of_fileExists())
+		if(!of_fileExists())
 		{
 			texts = Sys.of_getReplacedArrayList(texts, "§", "&");
 			datei.of_set("Text", texts);
@@ -153,7 +153,7 @@ public class Text extends Objekt
 	 */
 	public void of_createTemplateFile() 
 	{	
-		if(of_fileExists())
+		if(!of_fileExists())
 		{
 			ArrayList<String> texts = new ArrayList<String>();
 			
