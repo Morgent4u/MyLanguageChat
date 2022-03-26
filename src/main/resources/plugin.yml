@@ -1,0 +1,11 @@
+name: MyLanguageChat
+version: '${project.version}'
+main: com.language.main.main
+api-version: 1.18
+authors: [ Nihar ]
+
+softdepend: [PlaceholderAPI,Vault]
+
+commands:
+  Language:
+    usuage: /Language
