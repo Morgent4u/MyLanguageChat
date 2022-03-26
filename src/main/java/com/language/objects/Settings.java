@@ -77,7 +77,6 @@ public class Settings extends Objekt
 			ib_useVault = datei.of_getSetBoolean(sectionKey + ".Settings.UseVault", true);
 			ib_usePlaceholderAPI = datei.of_getSetBoolean(sectionKey + ".Settings.UsePlaceholderAPI", false);
 
-			//	Derzeit deaktiviert:
 			// ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
 			ib_useOwnWebservice = false;
 
