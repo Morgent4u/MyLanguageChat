@@ -270,6 +270,15 @@ public class Settings extends Objekt
 		datei.of_save("Settings.of_setTranslateEveryMessage2DefaultUserLanguage(boolean)");
 	}
 
+	public void of_setGlobalTranslateLanguage(String globalLanguage)
+	{
+		this.noSeparateChat_defaultLanguage = globalLanguage.toLowerCase();
+
+		//	Speicherung in der Datei...
+		datei.of_set(sectionKey + ".Chat.GlobalTranslatedChat.DefaultLanguage", noSeparateChat_defaultLanguage.toUpperCase());
+		datei.of_save("Settings.of_setGlobalTranslateLanguage(String)");
+	}
+
 	/* ************************* */
 	/* GETTER */
 	/* ************************* */

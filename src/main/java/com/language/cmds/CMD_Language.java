@@ -214,6 +214,31 @@ public class CMD_Language implements CommandExecutor
 								
 								return false;
 							}
+							else if(args[0].equalsIgnoreCase("set-global-language"))
+							{
+								if(ps.of_hasSetupPermissions())
+								{
+									boolean lb_languageExists = main.TRANSLATION.of_languageIsSupported(args[1]);
+
+									if(lb_languageExists)
+									{
+										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The global-language has been changed to:§a " + main.SETTINGS.of_getSupportedLanguagesWithFullNames().get(args[1].toLowerCase()));
+										main.SETTINGS.of_setGlobalTranslateLanguage(args[1]);
+									}
+									else
+									{
+										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The language §a"+args[1]+"§f is not available or is not set in the 'settings.yml'!");
+									}
+
+									return false;
+								}
+								else
+								{
+									main.MESSAGESERVICE.of_sendMsgHasNoPermissions(ps.of_getPlayer());
+								}
+
+								return false;
+							}
 						}
 					}
 					else 
@@ -251,12 +276,14 @@ public class CMD_Language implements CommandExecutor
 		p.sendMessage("§c/Language help");
 		p.sendMessage("§aEnable or disable the plugin:");
 		p.sendMessage("§c/Language enable/disable");
-		p.sendMessage("§aSet the default-language:");
+		p.sendMessage("§aSet the default-language (for new players):");
 		p.sendMessage("§c/Language default-language <country-code>");
 		p.sendMessage("§aSet the translate symbol:");
 		p.sendMessage("§c/Language translate-symbol <symbol>");
 		p.sendMessage("§aTranslate every message into the users language:");
 		p.sendMessage("§c/Language translate-everything");
+		p.sendMessage("§aSet the default global-language in chat:");
+		p.sendMessage("§c/Language set-global-language <country-code>");
 		p.sendMessage("");
 		p.sendMessage("§7══════════════");
 	}
