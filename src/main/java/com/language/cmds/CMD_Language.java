@@ -190,7 +190,7 @@ public class CMD_Language implements CommandExecutor
 									}
 									else 
 									{
-										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The language §a"+args[1]+"§f is not avaible or is not set in the 'settings.yml'!");
+										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The language §a"+args[1]+"§f is not available or is not set in the 'settings.yml'!");
 									}	
 								}
 								else 

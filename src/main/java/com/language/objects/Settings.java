@@ -78,12 +78,12 @@ public class Settings extends Objekt
 			ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
 			
 			//	Chat:
-			chatDesign = datei.of_getSetString(sectionKey + ".Chat.Design", "&8[&c%group%&8]&a %p%&7: &f%message%").replace("&", "�");			
+			chatDesign = datei.of_getSetString(sectionKey + ".Chat.Design", "&8[&c%group%&8]&a %p%&7: &f%message%").replace("&", "§");
 			ib_useSeparateChat = !datei.of_getSetBoolean(sectionKey + ".Chat.GlobalTranslatedChat.Use", false);
 			noSeparateChat_defaultLanguage = datei.of_getSetString(sectionKey+".Chat.GlobalTranslatedChat.DefaultLanguage", "EN").toLowerCase();
 			
 			//	Translations:
-			chatTranslateSymbol = datei.of_getSetString(sectionKey + ".Translation.OnlyTranslateBySymbole", "none");
+			chatTranslateSymbol = datei.of_getSetString(sectionKey + ".Translation.OnlyTranslateBySymbol", "none");
 			ib_useChatTranslateSymbole = !chatTranslateSymbol.equals("none");
 			ib_translateEveryMessage2DefaultLanguage = datei.of_getSetBoolean(sectionKey+".Translation.TranslateEveryMessage2UserLanguage", false);
 			String[] supportedLanguages = new String[] {"EN - English", "NL - Netherlands", "FI - Finnland", "FR - France", "DE - Germany", "GR - Greece", "HU - Hungary", "IE - Ireland", "IT - Italy", "JP - Japan", "PL - Poland", "PT - Portugal", "RU - Russia", "ES - Spain", "SE - Sweden", "TR - Turkey", "UA - Ukraine"};
@@ -191,9 +191,9 @@ public class Settings extends Objekt
 		Sys.of_sendMessage("UseVault-Enabled: "+of_isUsingVault());
 		Sys.of_sendMessage("UsePlaceholderAPI-Enabled: "+ of_isUsingPlaceholderAPI());
 		Sys.of_sendMessage("OwnWebservice-Enabled: "+of_isUsingOwnWebservice());
-		Sys.of_sendMessage("Chat-Design: "+of_getChatDesign().replace("�", "&"));
-		Sys.of_sendMessage("OnlyTranslateBySymbole: "+ of_isUsingChatSymbol());
-		Sys.of_sendMessage("OnlyTranslateBySymbole-Symbole: "+ of_getChatTranslateSymbol());
+		Sys.of_sendMessage("Chat-Design: "+of_getChatDesign());
+		Sys.of_sendMessage("OnlyTranslateBySymbol-Enabled: "+ of_isUsingChatSymbol());
+		Sys.of_sendMessage("OnlyTranslateBySymbol-Symbol: "+ of_getChatTranslateSymbol());
 		Sys.of_sendMessage("GlobalTranslatedChat: "+!of_isUsingSeparateChats());
 		Sys.of_sendMessage("GlobalTranslatedChat-DefaultLanguage: "+ of_getDefaultLanguage4NoSparatechat());
 		Sys.of_sendMessage("TranslateEveryMessage2UserLanguage: "+of_isUsingTranslateEveryMessage2UserLanguage());
