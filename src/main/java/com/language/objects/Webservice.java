@@ -19,6 +19,13 @@ import org.json.simple.parser.JSONParser;
 import com.language.ancestor.Objekt;
 import com.language.sys.Sys;
 
+/**
+ * @Created 20.03.2022
+ * @Author Nihar
+ * @Description
+ * This object is used to send requests to a specific webservice.
+ * The answer from the webservice is only used in reference to the transfer-object.
+ */
 public class Webservice extends Objekt
 {
 	//	Attribute: HTTP-Request
@@ -29,14 +36,30 @@ public class Webservice extends Objekt
 	//	Attribute: JSON
     JSONParser jsonParser = new JSONParser();
 
+	/* ************************************* */
 	/* CONSTRUCTOR */
-	/***************************************/
+	/* ************************************* */
     
 	public Webservice() { }
 
+	/* ************************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
+	/* ************************************* */
+
+	/**
+	 * This function gets a translated text by calling a specific webservice.
+	 * <b>For this function the webservice connection is needed!
+	 * @param translatedText Text which should be translated in another language.
+	 *                       For example:
+	 *                       TranslatedText = 'Hello world.'
+	 * @param sourceLanguage Country code from the text which should be translated.
+	 *                       For example:
+	 *                       sourceLanguage = 'EN'
+	 * @param translateLanguage Country code in which the text should be translated.
+	 *                          For example:
+	 *                          translateLanguage = 'DE'
+	 * @return A string with the translated text. For example: 'Hallo welt.'
+	 */
 	public String of_getTranslatedTextBySpecificSource(String translatedText, String sourceLanguage, String translateLanguage) 
 	{
         //	Attribute die wir �bertragen wollen, definieren...
@@ -76,12 +99,25 @@ public class Webservice extends Objekt
 		
 		return translatedText;
 	}
-	
+
+	/**
+	 * Overload of function of_getTranslatedTextBySpecificSource();
+	 * <b>This function is using by default 'auto-translation' as the sourceLanguage!</>
+	 * @param translatedText Text which should be translated.
+	 * @param translateLanguage Country code of the language in which the text should be translated.
+	 *                          For example: 'EN'
+	 * @return A string in the translated language.
+	 */
 	public String of_getTranslatedTextByAutoSource(String translatedText, String translateLanguage) 
 	{
 		return of_getTranslatedTextBySpecificSource(translatedText, "auto", translateLanguage);
 	}
-	
+
+	/**
+	 * This function checks the user defined webservice.
+	 * <b>Not supported yet, this function uses the default-webservice as default!</>
+	 * @return 1 = SUCCESS, -1 = ERROR
+	 */
 	public int of_checkConnection4WebService() 
 	{
 		//	In den Einstellungen schauen, ob ein eigener Webservice angegeben wurde...
@@ -104,8 +140,6 @@ public class Webservice extends Objekt
 					if(webserviceFile != null)
 					{
 						//	Inhalte einlesen...
-						//	Todo...
-
 						return 1;
 					}
 				}
@@ -116,7 +150,13 @@ public class Webservice extends Objekt
 		Sys.of_debug("[WebService]: ...use default webservice...");
 		return of_checkConnection2DefaultWebService();
 	}
-	
+
+	/**
+	 * This function checks the connection to the webservice.
+	 * <b>If the connection is not valid, the plugin cannot be used and
+	 * gets disabled!
+	 * @return 1 = SUCCESS, -1 = ERROR - Disabling the plugin.
+	 */
 	private int of_checkConnection2DefaultWebService() 
 	{
 		//	RC:
@@ -167,8 +207,9 @@ public class Webservice extends Objekt
 		return -1;
 	}
 
+	/* ************************************* */
 	/* DECONSTRUCTOR */
-	/***************************************/
+	/* ************************************* */
 	
 	@Override
 	public void of_unload()

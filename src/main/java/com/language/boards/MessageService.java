@@ -8,6 +8,7 @@ import com.language.utils.Datei;
 import com.language.ancestor.Objekt;
 import com.language.objects.Text;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class MessageService extends Objekt
 {
@@ -26,10 +27,10 @@ public class MessageService extends Objekt
 	private Datei datei;
 	private String prefix;
 	private boolean ib_alwaysPrefix;
-	
-	/***************************************/
-	/* Constructor */
-	/***************************************/
+
+	/* ************************* */
+	/* CONSTRUCTOR */
+	/* ************************* */
 	
 	public MessageService(String filePath) 
 	{
@@ -51,7 +52,7 @@ public class MessageService extends Objekt
 	}
 	
 	@Override
-	public int of_load(String[] args) 
+	public void of_load(String[] args)
 	{
 		String[] configKeys =  datei.of_getKeySectionsByKey(args[0]);
 		
@@ -60,33 +61,35 @@ public class MessageService extends Objekt
 			//	Sicherstellen, dass wir Keys haben bzw. Sectionen...
 			if(configKeys.length > 0) 
 			{
-				for(int i = 0; i < configKeys.length; i++) 
+				for (String configKey : configKeys)
 				{
-					String lokalKey = args[0]+"."+configKeys[i];
+					String lokalKey = args[0] + "." + configKey;
 					String tmpMessage = datei.of_getStringByKey(lokalKey);
-					
-					if(tmpMessage != null) 
-					{
+
+					if (tmpMessage != null) {
 						//	Schon mal ein bisschen übersetzen :)
 						messages.put(lokalKey, tmpMessage);
 					}
 				}
 			}
 		}
-		
-		return 1;
-	}
-	
-	/***************************************/
-	/* Objekt-Anweisungen */
-	/***************************************/
-	
+
+    }
+
+	/* ************************* */
+	/* OBJEKT-ANWEISUNGEN */
+	/* ************************* */
+
+	/**
+	 * Is used to create predefined texts by using the
+	 * object Text.
+	 */
 	private void of_createTextTemplateFiles() 
 	{
 		//	Text-Invites
 		Text txt = new Text("txt_cmdhelper4user");
 		
-		if(!txt.of_fileExists()) 
+		if(txt.of_fileExists())
 		{
 			//	Template:
 			ArrayList<String> texts = new ArrayList<String>();
@@ -109,7 +112,7 @@ public class MessageService extends Objekt
 		
 		txt = new Text("txt_supported_languages");
 		
-		if(!txt.of_fileExists()) 
+		if(txt.of_fileExists())
 		{
 			//	Template:
 			ArrayList<String> texts = new ArrayList<String>();
@@ -128,7 +131,10 @@ public class MessageService extends Objekt
 			txt.of_save();
 		}
 	}
-	
+
+	/**
+	 * Creates the messagesSounds.yml template.
+	 */
 	private void of_createTemplateFile() 
 	{
 		//	AUTO-CREATE MODE :^)
@@ -158,8 +164,14 @@ public class MessageService extends Objekt
 		//	Fehlende Texte hinzufügen...
 		of_createTextTemplateFiles();
 	}
-	
-	public String of_translateMessageWithPlayerStats(Player p, String message) 
+
+	/**
+	 * Is used to translate a message with player stats.
+	 * @param p Player instance.
+	 * @param message Message which should be translated with placeholder and color codes.
+	 * @return A string which contains the input message with translated placeholder and color codes.
+	 */
+	public String of_translateMessageWithPlayerStats(@NotNull Player p, String message)
 	{
 		//	Generell übersetzen...
 		message = of_translateMessage(message, true);
@@ -171,7 +183,12 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
+
+	/**
+	 * Is used to translate a text with the default prefix and color codes.
+	 * @param message String which contains replacements and the default prefix.
+	 * @return A string which contains the input message with translated placeholder and color codes.
+	 */
 	public String of_translateMessage(String message) 
 	{	
 		//	Übersetzung:
@@ -186,8 +203,14 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
-	public String of_translateMessage(String message, boolean sendFromTextObject) 
+
+	/**
+	 * Is used to get a replaced message without an automatic added prefix.
+	 * @param message String which contains replacements.
+	 * @param sendFromTextObject This is a useless boolean.
+	 * @return A string which contains the translated/replaced input message.
+	 */
+	public String of_translateMessage(String message, boolean sendFromTextObject)
 	{	
 		//	Übersetzung:
 		message = message.replace("&", "§");
@@ -195,10 +218,69 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
-	/***************************************/
-	/* DebugCenter */
-	/***************************************/
+
+	/**
+	 * This function is used to play a sound to a specific message when it's defined in the messageSounds.yml.
+	 * If the specific sound-attribute to the message-key contains an empty result, the sound will not be played.
+	 * @param p Player instance.
+	 * @param msgKey Message-key.
+	 */
+	private void of_playSound4Player(Player p, String msgKey)
+	{
+		//	MessageKeyFragments
+		String[] messageKeyFragments = msgKey.split("\\.", 2);
+
+		//	MessageKeyFragments aufbrechen...
+		if(messageKeyFragments.length == 2)
+		{
+			String playSound = messages.get("Sounds."+messageKeyFragments[1]);
+
+			if(playSound != null)
+			{
+				//	Wenn Empty, sound nicht abspielen!
+				if(!playSound.isEmpty())
+				{
+					playSound = playSound.toLowerCase();
+					p.playSound(p.getLocation(), playSound, 1, 1);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Plays a specific sound by the sound-key which is defined in the messagesSounds.yml
+	 * @param p Player instance.
+	 * @param soundKey Sound-key.
+	 * @return 1 = Sound has been played. -1 = Sound not found for the sound-key. -2 = Cannot play the sound because it's defined so in the messagesSounds.yml
+	 */
+	public int of_playSound4PlayerBySoundKey(Player p, String soundKey)
+	{
+		//	RC:
+		//	 1: OK
+		//	-1: Sound nicht gefunden.
+		//	-2: Nicht abspielen!
+
+		String playSound = messages.get(soundKey);
+
+		if(playSound != null)
+		{
+			//	Wenn Empty, sound nicht abspielen!
+			if(!playSound.isEmpty())
+			{
+				playSound = playSound.toLowerCase();
+				p.playSound(p.getLocation(), playSound, 1, 1);
+				return 1;
+			}
+
+			return -2;
+		}
+
+		return -1;
+	}
+
+	/* ************************* */
+	/* DEBUG CENTER */
+	/* ************************* */
 	
 	@Override
 	public void of_sendDebugDetailInformation() 
@@ -215,14 +297,14 @@ public class MessageService extends Objekt
 			}
 		}
 	}
+
+	/* ************************* */
+	/* STANDARD NACHRICHTEN */
+	/* ************************* */
 	
-	/*************************************************/
-	/* STANDARD NACHRICHTEN // HIER IST GENERAL-TEIL */
-	/*************************************************/
-	
-	public int of_sendMsgHasNoPermissions(Player p) 
+	public void of_sendMsgHasNoPermissions(Player p)
 	{
-		return of_getMessage(p, "General.noPermissions");
+		of_getMessage(p, "General.noPermissions");
 	}
 	
 	public int of_sendMsgThatAnErrorOccurred(Player p, String errorMessage) 
@@ -234,12 +316,16 @@ public class MessageService extends Objekt
 	{
 		return of_getMessage(p, "General.playerIsNotOnline");
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* GETTER */
-	/***************************************/
-	
-	//	Hauptüberladung YEAH!
+	/* ************************* */
+
+	/**
+	 * Gets a messages by the message-key which is set in the messagesSounds.yml
+	 * @param msgKey The message key for example: 'General.hasNoPermissions'
+	 * @return A message which is defined for the message-key. This message also have translated color codes or placeholder.
+	 */
 	private String of_getMessage(String msgKey) 
 	{
 		String message = messages.get(msgKey);
@@ -258,11 +344,19 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
+
+	/**
+	 * Is used to get a message by the message-key. After getting the message-key
+	 * the message will be automatically replaced with the player stats.
+	 * Specific: This function plays a sound for the player, if a sound is defined to the message-key.
+	 * @param p Placer instance
+	 * @param msgKey Message-key
+	 * @return A message which is translated with the player stats.
+	 */
 	public int of_getMessage(Player p, String msgKey) 
 	{
 		String message = of_getMessage(msgKey);
-		
+
 		if(p != null) 
 		{
 			//	Erst mal Spieler Inhalte übersetzen...
@@ -277,29 +371,49 @@ public class MessageService extends Objekt
 
 		return -1;
 	}
-	
+
+	/**
+	 * Extended function of_getMessage(Player, String) with a otherPlayer-instance.
+	 * This is used to replace the placeholder: %otherPlayer% in the message.
+	 * @param p First player instance.
+	 * @param msgKey Message-key.
+	 * @param d Second player instance.
+	 * @return A message which is translated with the player stats of the first player.
+	 * If this message contains the placeholder %otherPlayer% this placeholder will be replaced wiht the
+	 * second player name.
+	 */
 	public int of_getMessage(Player p, String msgKey, Player d) 
 	{
 		String message = of_getMessage(msgKey);
 		
 		if(p != null) 
 		{
-			//	Erst mal Spieler Inhalte übersetzen...
-			message = message.replace("%p%", p.getName()).replace("%name%", p.getName());
-			message = message.replace("%uuid%", p.getUniqueId().toString());
-			message = message.replace("%displayname%", p.getDisplayName());
-			
-			//	Spieler 2 spezifische replacements:
-			message = message.replace("%otherPlayer%", d.getName());
-			
-			p.sendMessage(message);
-			of_playSound4Player(p, msgKey);
-			return 1;
+			int rc = of_getMessage(p, msgKey);
+
+			if(rc == 1)
+			{
+				//	Spieler 2 spezifische replacements:
+				message = message.replace("%otherPlayer%", d.getName());
+
+				p.sendMessage(message);
+				of_playSound4Player(p, msgKey);
+				return 1;
+			}
 		}
 
 		return -1;
 	}
-	
+
+	/**
+	 * This function is an extended function of of_getMessage(String, String[], String[]).
+	 * This extension is for the player specific stats. It's used to add dynamically placeholders and replacements
+	 * to a specific message-key.
+	 * @param p Player instance.
+	 * @param msgKey Message-key.
+	 * @param placeHolder An array which contains the placeholder for example: new String[] {"%currentDeaths%"};
+	 * @param replacements An array which contains the replacement for example new String[] {ps.of_getDeathsAsString()};
+	 * @return A message which is defined by the message-key. This message also has dynamic replaced placeholder with the defined replacements.
+	 */
 	public int of_getMessage(Player p, String msgKey, String[] placeHolder, String[] replacements) 
 	{
 		//	In of_getMessage werden noch schnell die replacements durchlaufen.... on the fly :^)
@@ -318,7 +432,14 @@ public class MessageService extends Objekt
 
 		return -1;
 	}
-	
+
+	/**
+	 * This function is used to add dynamically placeholders and replacements to a specific message-key.
+	 * @param msgKey Message-key.
+	 * @param placeHolder An array which contains the placeholder for example: new String[] {"%currentPlayers%"};
+	 * @param replacements An array which contains the replacement for example new String[] {Bukkit.getOnlinePlayers().size().toString()};
+	 * @return A message which is defined by the message-key. This message also has dynamic replaced placeholder with the defined replacements.
+	 */
 	private String of_getMessage(String msgKey, String[] placeHolder, String[] replacements) 
 	{
 		String message = of_getMessage(msgKey);
@@ -338,7 +459,15 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
+
+	/**
+	 * This function is equal to the function of_getMessage(String msgKey, String[] placeholder, String[] replacements).
+	 * The different is that the placeholder and replacements are defined in the same array.
+	 * @param msgKey Message-key.
+	 * @param replacementAndPlaceholder An array which contains in the previous place the placeholder and in the next element the
+	 *                                  replacement. For exmaple: new String[] {"%time%", new Date().getTime().toString()};
+	 * @return A message which is defined by the message-key. This message also has dynamic replaced placeholder with the defined replacements.
+	 */
 	public String of_getMessage(String msgKey, String[] replacementAndPlaceholder) 
 	{
 		//  of_getMessage(String msgKey, String[] placeHolder, String[] replacements)
@@ -354,7 +483,7 @@ public class MessageService extends Objekt
 				//	Übersetzungsprozess der Replacements...
 				for(int i = 0; i < replacementAndPlaceholder.length; i++) 
 				{
-					if(Integer.valueOf(i + 1) != replacementAndPlaceholder.length) 
+					if(i + 1 != replacementAndPlaceholder.length)
 					{
 						message = message.replace(replacementAndPlaceholder[i], replacementAndPlaceholder[Integer.valueOf(i + 1)]);						
 					}
@@ -364,65 +493,22 @@ public class MessageService extends Objekt
 		
 		return message;
 	}
-	
+
+	/**
+	 * Gets the message by message-key without a translation!
+	 * @param msgKey Message-key.
+	 * @return The message specified to the message-key.
+	 */
 	public String of_getMessageByMsgKey(String msgKey) 
 	{
 		return messages.get(msgKey);
 	}
-	
-	private void of_playSound4Player(Player p, String msgKey) 
-	{
-		//	MessageKeyFragments
-		String[] messagKeyFragments = msgKey.split("\\.", 2);
-		
-		//	MessageKeyFragments aufbrechen...
-		if(messagKeyFragments != null && messagKeyFragments.length == 2) 
-		{
-			String playSound = messages.get("Sounds."+messagKeyFragments[1]);
-			
-			if(playSound != null) 
-			{
-				//	Wenn Empty, sound nicht abspielen!
-				if(!playSound.isEmpty()) 
-				{
-					playSound = playSound.toLowerCase();
-					p.playSound(p.getLocation(), playSound, 1, 1);	
-				}	
-			}
-		}
-	}
-	
-	public int of_playSound4PlayerBySoundKey(Player p, String soundKey) 
-	{
-		//	RC:
-		//	 1: OK
-		//	-1: Sound nicht gefunden.
-		//	-2: Nicht abspielen!
-		
-		String playSound = messages.get(soundKey);
-		
-		if(playSound != null) 
-		{
-			//	Wenn Empty, sound nicht abspielen!
-			if(!playSound.isEmpty()) 
-			{
-				playSound = playSound.toLowerCase();
-				p.playSound(p.getLocation(), playSound, 1, 1);
-				return 1;
-			}
-			
-			return -2;
-		}
 
-		return -1;
-	}
-	
+	/**
+	 * Returns the amount of loaded messages/sounds.
+	 * @return Amount
+	 */
 	public int of_getMessageCount() 
-	{
-		return messages.size();
-	}
-	
-	public int of_getParameterCount() 
 	{
 		return messages.size();
 	}

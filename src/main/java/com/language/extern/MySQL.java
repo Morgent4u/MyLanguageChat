@@ -38,21 +38,31 @@ public class MySQL
 	String updateKeyColumn;
 	String updateTableColumn4Key;
 
-	/***************************************/
-	/* CONSTRUCTOR // LOADER */
-	/***************************************/
-	
+	/* ************************* */
+	/* CONSTRUCTOR */
+	/* ************************* */
+
+	/**
+	 * Constructor of the transaction-object.
+	 * @param instanzName Instance name for example: 'MAIN' or 'FAST SQL'
+	 *                    This is used to get a difference between multiple transaction-object instances.
+	 */
 	public MySQL(String instanzName) 
 	{
 		this.instanzName = "[MySQL-"+instanzName+"]:";
 	}
-	
-	/***************************************/
-	/* OBJEKT - ANWEISUNGEN */
-	/***************************************/
+
+	/* ************************* */
+	/* OBJEKT-ANWEISUNGEN */
+	/* ************************* */
 	
 	//	Anhand aller Angaben ConnectionString bauen und Verbindung
 	//	herstellen.
+
+	/**
+	 * Creates a database connection to the defined database in the settings.
+	 * @return 1 = SUCCESS, -1 = ERROR - An error will be displayed in the console!
+	 */
 	public int of_createConnection() 
 	{
 		Sys.of_debug(instanzName + " Try to connect to the following database: " + dbName);
@@ -139,7 +149,12 @@ public class MySQL
 	    
 		return -1;
 	}
-	
+
+	/**
+	 * Validation process for this transfer object.
+	 * This function checks if all necessary attributes has been set.
+	 * @return EMPTY-String = SUCCESS, NO-EMPTY-String = Error - A message with the error message.
+	 */
 	public String of_validate() 
 	{
 		if(server == null || server.isEmpty()) 
@@ -169,7 +184,10 @@ public class MySQL
 		
 		return null;
 	}
-	
+
+	/**
+	 * This function close the database connection.
+	 */
     public void of_closeConnection() 
     {
     	if(con != null) 
@@ -184,14 +202,21 @@ public class MySQL
         			con = null;
         		}
 			}
-    		catch (Exception e)  { }
+    		catch (Exception ignored)  { }
     	}
     }
-    
-	/***************************************/
+
+	/* ************************* */
 	/* RUN UPDATE */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * This function executes a sql-statement. For example:
+	 * 'UPDATE user SET user.name = 'Test' WHERE user.userId = 1;'
+	 * @param sql_insert_update The sql-statement which will be executed.
+	 * @param bool Displays an error message.
+	 * @return TRUE = SUCCESS, FALSE = ERROR - Error message only appears when the parameter 'bool' is true!
+	 */
 	private boolean of_run_update(String sql_insert_update, boolean bool)
 	{
         try
@@ -208,27 +233,46 @@ public class MySQL
         { 
         	if(bool) 
         	{
-    			Sys.of_sendErrorMessage(null, "MySQL", "of_run_update("+bool+");", sql_insert_update);
+    			Sys.of_sendErrorMessage(null, "MySQL", "of_run_update("+ true +");", sql_insert_update);
         	}
         }
 		
 		return false;
 	}
-	
+
+	/**
+	 * Overload function of of_run_update();
+	 * This function is using by default display error message.
+	 * @param sql_insert_update The sql-statement which will be executed.
+	 * @return TRUE = SUCCESS, FALSE = ERROR - <b>Message will be displayed in the console!<b/>
+	 */
 	public boolean of_run_update(String sql_insert_update) 
 	{
 		return of_run_update(sql_insert_update, true);
 	}
-	
-	public boolean of_run_update_supress(String sql_insert_update) 
+
+	/**
+	 * Overload function of of_run_update();
+	 * This function is using by default don't display error message.
+	 * @param sql_insert_update The sql-statement which will be executed.
+	 * @return TRUE = SUCCESS, FALSE = ERROR - <b>No Message will be displayed in the console!<b/>
+	 */
+	public boolean of_run_update_suppress(String sql_insert_update)
 	{
 		return of_run_update(sql_insert_update, false);
-	}	
-	
-	/***************************************/
-	/* GET ONE/SINGLE ROW */
-	/***************************************/
-	
+	}
+
+	/* ************************* */
+	/* GET ONE ROW VALUE */
+	/* ************************* */
+
+	/**
+	 * This function is used to retrieve a one value/column from the database.
+	 * @param sql_select_query SQL-statement which will be executed.
+	 * @param column_name Column name from which the value should be from.
+	 * @param bool Display an error message into the console.
+	 * @return Value from the column which is specified in the sql-statement and the parameter column_name.
+	 */
 	private String of_getRowValue(String sql_select_query, String column_name, boolean bool) 
 	{
     	ResultSet rs = null;
@@ -249,27 +293,51 @@ public class MySQL
         {
         	if(bool) 
         	{
-    			Sys.of_sendErrorMessage(null, "MySQL", "of_getRowValue("+bool+");", sql_select_query);
+    			Sys.of_sendErrorMessage(null, "MySQL", "of_getRowValue("+ true +");", sql_select_query);
         	}
         }
         
 		return null;
 	}
-	
+
+	/**
+	 * Overload for of_getRowValue(String sqlStatement, String column_name, boolean displayErrorMessage)
+	 * <b>This function sends by default an error message into the console!<b/>
+	 * @param sql_select_query SQL-Statement which will be executed.
+	 * @param column_name Column name from which the value should be from.
+	 * @return Value from the column which is specified in the sql-statement and the parameter column_name.
+	 */
     public String of_getRowValue(String sql_select_query, String column_name) 
     {
     	return of_getRowValue(sql_select_query, column_name, true);
     }
-	
+
+	/**
+	 * Overload for of_getRowValue(String sqlStatement, String column_name, boolean displayErrorMessage)
+	 * <b>This function sends by default no error message into the console!<b/>
+	 * @param sql_select_query SQL-Statement which will be executed.
+	 * @param column_name Column name from which the value should be from.
+	 * @return Value from the column which is specified in the sql-statement and the parameter column_name.
+	 */
     public String of_getRowValue_suppress(String sql_select_query, String column_name) 
     {
     	return of_getRowValue(sql_select_query, column_name, false);
     }
-    
-	/***************************************/
-	/* GET THE RESULTSET */
-	/***************************************/
-    
+
+	/* ************************* */
+	/* GET A RESULT SET */
+	/* ************************* */
+
+	/**
+	 * This function returns a ResultSet. This can be used for execute a multirow select-statement.
+	 * For example:
+	 * ResultSet result = MySQL.of_getResultSet("SELECT * FROM user;", false, false);
+	 * @param sql_select_query_rows SQL-Statement which will be executed.
+	 * @param bool Display error message
+	 * @param result_next This should be FALSE when you're using a multirow SELECT-Statement. This can be TRUE
+	 *                    if you know that your result will be one row, and you want to get data from more COLUMN-Data than one!
+	 * @return Returns a ResultSet for external using!
+	 */
     private ResultSet of_getResultSet(String sql_select_query_rows, boolean bool, boolean result_next) 
     {
         ResultSet rs = null;
@@ -297,31 +365,63 @@ public class MySQL
         {
         	if(bool) 
         	{
-    			Sys.of_sendErrorMessage(null, "MySQL", "of_getResultSet("+bool+");", sql_select_query_rows);
+    			Sys.of_sendErrorMessage(null, "MySQL", "of_getResultSet("+ true +");", sql_select_query_rows);
         	}
         }
         
         return null;
     }
-    
+
+	/**
+	 * Overload: This function returns a ResultSet. This can be used for execute a multirow select-statement.
+	 * For example:
+	 * ResultSet result = MySQL.of_getResultSet("SELECT * FROM user;", false, false);
+	 * <b>This function sends by default an error message to the console!</b>
+	 * @param sql_select_query_rows SQL-Statement which will be executed.
+	 * @param result_next This should be FALSE when you're using a multirow SELECT-Statement. This can be TRUE
+	 *                    if you know that your result will be one row, and you want to get data from more COLUMN-Data than one!
+	 * @return Returns a ResultSet for external using!
+	 */
     public ResultSet of_getResultSet(String sql_select_query_rows, boolean result_next)
     {
     	return of_getResultSet(sql_select_query_rows, true, result_next);
     }
-    
+
+	/**
+	 * Overload: This function returns a ResultSet. This can be used for execute a multirow select-statement.
+	 * For example:
+	 * ResultSet result = MySQL.of_getResultSet("SELECT * FROM user;", false, false);
+	 * <b>This function sends by default no error message to the console!</b>
+	 * @param sql_select_query_rows SQL-Statement which will be executed.
+	 * @param result_next This should be FALSE when you're using a multirow SELECT-Statement. This can be TRUE
+	 *                    if you know that your result will be one row, and you want to get data from more COLUMN-Data than one!
+	 * @return Returns a ResultSet for external using!
+	 */
     public ResultSet of_getResultSet_suppress(String sql_select_query_rows, boolean result_next)
     {
     	return of_getResultSet(sql_select_query_rows, false, result_next);
     }
-    
+
+	/**
+	 * This function is used to get a primary-key for a table by using an external key-column-control table.
+	 * For this function your code must have already executed following function: of_setUpdateKeyTableAndColumns(String, String, String);
+	 * @param tableName Table name from which table you want to get the primary-key.
+	 * @return Primary-key id.
+	 */
     public int of_updateKey(String tableName) 
     {
     	//	Beide Strings m��ssen gesetzt worden sein!
     	if(!updateKeyTable.isEmpty() && !updateKeyColumn.isEmpty() && !updateTableColumn4Key.isEmpty()) 
     	{
-    		String sqlSelect = "SELECT " + updateKeyColumn + " FROM " + updateKeyTable + " WHERE " + updateTableColumn4Key + " = '"+tableName+"';"; 
-    		int key = Integer.valueOf(of_getRowValue(sqlSelect, updateKeyColumn, false));
-    		
+    		String sqlSelect = "SELECT " + updateKeyColumn + " FROM " + updateKeyTable + " WHERE " + updateTableColumn4Key + " = '"+tableName+"';";
+			int key = -1;
+
+			try
+			{
+				key = Integer.parseInt(of_getRowValue(sqlSelect, updateKeyColumn, false));
+			}
+			catch (Exception ignored) { }
+
     		if(key == -1) 
     		{
     			Sys.of_sendErrorMessage(null, "MySQL", "of_updateKey("+tableName+");", "This is a SQL-problem might be the table entry doesn't exist! SQL: "+sqlSelect);
@@ -336,10 +436,10 @@ public class MySQL
     	
     	return -1;
     }
-    
-	/***************************************/
-	/* SETTER // ADDER // REMOVER */
-	/***************************************/
+
+	/* ****************************** */
+	/* SETTER // REMOVER // ADDER */
+	/* ****************************** */
 	
 	public void of_setServer(String server) 
 	{
@@ -360,18 +460,28 @@ public class MySQL
 	{
 		this.password = password;
 	}
-	
+
+	/**
+	 * <b>This function needs to be executed after initialising this object!<b/>
+	 * @param updateKeyTable Name of the table which controls the primary-keys for example: '%_keys'
+	 * @param updateKeyColumn The column which contains the key for example: 'lastkey'
+	 * @param updateTableColumn4Key The column which contains the table name for example: 'tablename'
+	 */
 	public void of_setUpdateKeyTableAndColumns(String updateKeyTable, String updateKeyColumn, String updateTableColumn4Key) 
 	{
 		this.updateKeyTable = updateKeyTable;
 		this.updateKeyColumn = updateKeyColumn;
 		this.updateTableColumn4Key = updateTableColumn4Key;
 	}
-	
-	/***************************************/
+
+	/* ****************************** */
 	/* BOOLS */
-	/***************************************/
-	
+	/* ****************************** */
+
+	/**
+	 * This function checks if this transaction-object is still connected to the database.
+	 * @return TRUE = Connected, FALSE = No connection to the database!
+	 */
 	public boolean of_isConnected() 
 	{
 		boolean lb_value = false;
@@ -382,7 +492,7 @@ public class MySQL
 			{
 				lb_value = !con.isClosed();
 			}
-			catch (Exception e) { }
+			catch (Exception ignored) { }
 		}
 		
 		return lb_value;

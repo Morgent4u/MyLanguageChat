@@ -14,8 +14,7 @@ public class Objekt
 	 * 	Mithilfe dieser Klasse werden Objekte erstellt.
 	 * 	
 	 */
-	
-	//	Attribute:
+
 	private int objektId;
 	private int objektTargetId;
 
@@ -24,44 +23,63 @@ public class Objekt
 	//	Flags
 	private boolean ib_errorFlag;
 	private boolean ib_autoSave;
-	
-	/***************************************/
+
+	/* ************************* */
 	/* LOADER */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * Ancestor for loading other objects.
+	 * @return 1 Success, -1 Error
+	 */
 	public int of_load()
 	{
 		//	Wird ggf. vom Erben �berschrieben...
 		Sys.of_sendMessage(of_getObjektName() + "of_load(); is not overriden!");
 		return -1;
 	}
-	
-	public int of_load(String[] args)
+
+	/**
+	 * Ancestor for loading other objects.
+	 * @param args Needed arguments for loading the objects.
+	 */
+	public void of_load(String[] args)
 	{
 		//	Wird ggf. vom Erben  �berschrieben...
 		Sys.of_sendMessage(of_getObjektName() + "of_load(String[] args); is not overriden!");
-		return -1;
 	}
-	
-	/***************************************/
-	/* DECONSTRUCTOR */
-	/***************************************/
-	
+
+	/* ************************* */
+	/* UNCONSTRUCTOR */
+	/* ************************* */
+
+	/**
+	 * Unloads the object.
+	 */
 	public void of_unload() 
 	{
-		//	Wird ggf. vom Erben �berschrieben.
+		//	Wird ggf. vom Erben ueberschrieben.
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * Is used to validate an object.
+	 * @return Gives back an error message or empty string for success.
+	 */
 	public String of_validate() 
 	{
 		Sys.of_sendMessage(of_getObjektName() + "of_validate; is not overriden!");
 		return "";
 	}
-	
+
+	/**
+	 * Is used to save an object.
+	 * @param invoker The invoker name which calls this function.
+	 * @return 1 = Success, -1 = Error
+	 */
 	public int of_save(String invoker) 
 	{
 		//	RC:
@@ -71,16 +89,23 @@ public class Objekt
 		//	Wird ggf. vom Erben �berschrieben...
 		return -1;
 	}
-	
-	public int of_save() 
+
+	/**
+	 * Overload function of of_save(String)
+	 */
+	public void of_save()
 	{
-		return of_save(of_getObjektName());
+		of_save(of_getObjektName());
 	}
-	
-	/***************************************/
-	/* DEBUG-CENTER */
-	/***************************************/
-	
+
+	/* ************************* */
+	/* DEBUG CENTER */
+	/* ************************* */
+
+	/**
+	 * Sends a debug information to the console.
+	 * @param invoker The name of the class which calls this function.
+	 */
 	public void of_sendDebugInformation(String invoker) 
 	{
 		if(Sys.of_isDebugModeEnabled()) 
@@ -105,17 +130,28 @@ public class Objekt
 			Sys.of_sendMessage("=====================================");	
 		}
 	}
-	
+
+	/**
+	 * Define information which will be displayed in the console.
+	 * This function should be called by of_sendDebugInformation(String);
+	 * This needs to be defined in every child-class.
+	 */
 	public void of_sendDebugDetailInformation()
 	{
 		//	Wird vom Erben mit Informationen gef�llt...
 		Sys.of_sendMessage(of_getObjektName()+".of_sendDebugDetailInformation(); is not overriden!");
 	}
-	
-	/***************************************/
-	/* ERROR-HANDLER */
-	/***************************************/
-	
+
+	/* ************************* */
+	/* ERROR HANDLER */
+	/* ************************* */
+
+	/**
+	 * Sends an error message to the console.
+	 * @param exception Exception if one exists otherwise type null.
+	 * @param invoker Classname which calls this function.
+	 * @param errorMessage A user defined error messages.
+	 */
 	public void of_sendErrorMessage(Exception exception, String invoker, String errorMessage) 
 	{
 		//	Farbcodes
@@ -147,10 +183,10 @@ public class Objekt
 			Sys.of_sendMessage(exception.getMessage());
 		}
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* SETTER */
-	/***************************************/
+	/* ************************* */
 	
 	public void of_setTargetId(int targetId) 
 	{
@@ -167,9 +203,9 @@ public class Objekt
 		this.objektInfo = info;
 	}
 
-	/***************************************/
+	/* ************************* */
 	/* GETTER */
-	/***************************************/
+	/* ************************* */
 	
 	public String of_getObjektName() 
 	{
@@ -190,10 +226,10 @@ public class Objekt
 	{
 		return objektTargetId;
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* BOOLS */
-	/***************************************/
+	/* ************************* */
 	
 	public boolean of_hasAnError() 
 	{

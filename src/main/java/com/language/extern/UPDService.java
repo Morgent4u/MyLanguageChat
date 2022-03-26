@@ -4,21 +4,16 @@ import com.language.ancestor.Objekt;
 import com.language.main.main;
 import com.language.sys.Sys;
 
+/**
+ * @Created 20.03.2022
+ * @Author Nihar
+ * @Description
+ * With the upd-service the database will be automatically updated for
+ * this plugin version.
+ */
 public class UPDService extends Objekt
 {
-	/*	Angelegt am: 20.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Mit dem UPD-Service wird die Datenbank
-	 * 	auf die Version des Plugins angehoben.
-	 * 	Dabei werden alle SQL-Statements in dieser Klasse
-	 * 	gesammelt und ggf. ausgef�hrt, wenn die DB-Version noch
-	 * 	nicht soweit ist.
-	 * 	
-	 */	
-	
 	//	Attribute:
-	
 	String lastUPDVersion;
 	
 	int executedSQLs;
@@ -27,17 +22,21 @@ public class UPDService extends Objekt
 	
 	int highestUPDVersionNumber;
 	int currentPluginVersionNumber;
-	
-	/***************************************/
+
+	/* ****************************** */
 	/* CONSTRUCTOR */
-	/***************************************/
-	
-	public UPDService() {}
-	
-	/***************************************/
-	/* SQL-Statements */
-	/***************************************/
-	
+	/* ****************************** */
+
+	public UPDService() { }
+
+	/* ****************************** */
+	/* OBJECT-ANWEISUNGEN */
+	/* ****************************** */
+
+	/**
+	 * This function starts updating the database.
+	 * @return 1 = SUCCESS, -1 Error
+	 */
 	public int of_runUPD() 
 	{
 		//	DB-Version aktualisieren.
@@ -95,8 +94,15 @@ public class UPDService extends Objekt
 		
 		return -1;
 	}
-	
-	public int of_run_statement(String version, String sqlStatement) 
+
+	/**
+	 * This function executes the sql-statements which are defined in of_runUPD();
+	 * If a version doesn't match with the current-plugin version, the statement will be skipped.
+	 * @param version Plugin-Version (DB-Version) which is required for running this sql-statement.
+	 * @param sqlStatement SQl-Statement
+	 * @return 1 = SUCCESS, 0 = SKIPPED, -1 = ERROR
+	 */
+	private int of_run_statement(String version, String sqlStatement)
 	{
 		//	RC:
 		//	 1: OK
@@ -105,15 +111,15 @@ public class UPDService extends Objekt
 		
 		String[] stmtVersion = version.split("\\.");
 		
-		if(stmtVersion != null && stmtVersion.length == 4) 
+		if(stmtVersion.length == 4)
 		{
 			//	Nummer innerhalb des Grenzbereichs (im besten Fall)
-			int versionNumber = Integer.valueOf(stmtVersion[3]);
+			int versionNumber = Integer.parseInt(stmtVersion[3]);
 			
 			//	Schauen ob die Nummer im Grenzbereich ist, wenn JA Statement ausf�hren...
 			if(highestUPDVersionNumber < versionNumber && versionNumber <= currentPluginVersionNumber) 
 			{
-				if(main.SQL.of_run_update_supress(sqlStatement))
+				if(main.SQL.of_run_update_suppress(sqlStatement))
 				{
 					Sys.of_debug("UPD-Success");
 					executedSQLs++;
@@ -129,17 +135,20 @@ public class UPDService extends Objekt
 		skippedSQLs++;
 		return 0;
 	}
-	
-	public int of_updateVersionNumber2Database() 
+
+	/**
+	 * This function sets the current plugin-version in the db-version table.
+	 */
+	public void of_updateVersionNumber2Database()
 	{
 		//	Wenn die UPD-Version 21.1.0.00 ist, braucht die Aktualisierung nicht erfolgen...
 		if(lastUPDVersion.equals("22.1.0.00")) 
 		{
-			return 1;
+			return;
 		}
 		
 		String sqlStatement = "UPDATE mlc_dbversion SET dbversion = '"+Sys.of_getVersion()+"';";
-		boolean bool = main.SQL.of_run_update_supress(sqlStatement);
+		boolean bool = main.SQL.of_run_update_suppress(sqlStatement);
 		
 		if(bool) 
 		{
@@ -150,16 +159,14 @@ public class UPDService extends Objekt
 		{
 			Sys.of_debug("UPD-Error");
 			errorSQLs++;
-			return -1;
 		}
-		
-		return 1;
+
 	}
-	
-	/***************************************/
+
+	/* ****************************** */
 	/* GETTER */
-	/***************************************/
-	
+	/* ****************************** */
+
 	public int of_getExecutedSQLs() 
 	{
 		return executedSQLs;
@@ -174,11 +181,15 @@ public class UPDService extends Objekt
 	{
 		return errorSQLs;
 	}
-	
-	/***************************************/
+
+	/* ****************************** */
 	/* BOOLS */
-	/***************************************/
-	
+	/* ****************************** */
+
+	/**
+	 * This function checks if the UPD-Service needs to update the database!
+	 * @return TRUE = AN UPDATE is needed!, FALSE = NO UPDATE is needed!
+	 */
 	public boolean of_canRunUPD() 
 	{
 		String sqlSelect = "SELECT dbversion FROM mlc_dbversion;";
@@ -208,14 +219,14 @@ public class UPDService extends Objekt
 		String[] updVersion = lastUPDVersion.split("\\.");
 		
 		//	Sicherstellen, dass alle Angaben korrekt sind.
-		if(pluginVersion[0] != null && updVersion != null && pluginVersion.length == 4 && updVersion.length == 4) 
+		if(pluginVersion[0] != null && pluginVersion.length == 4 && updVersion.length == 4)
 		{
 			//	Die ersten beiden Ziffern m�ssen identisch sein!
 			if(pluginVersion[0].equals(updVersion[0]) && pluginVersion[1].equals(updVersion[1])) 
 			{
 				//	Grenzbereich ermitteln:
-				currentPluginVersionNumber = Integer.valueOf(pluginVersion[3]);
-				highestUPDVersionNumber = Integer.valueOf(updVersion[3]);
+				currentPluginVersionNumber = Integer.parseInt(pluginVersion[3]);
+				highestUPDVersionNumber = Integer.parseInt(updVersion[3]);
 			}
 		}
 		

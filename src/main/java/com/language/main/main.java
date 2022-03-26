@@ -14,16 +14,15 @@ import com.language.objects.Webservice;
 import com.language.spieler.SpielerService;
 import com.language.sys.Sys;
 
+/**
+ * @Created 22.03.2022
+ * @Author Nihar
+ * @Description
+ * This class is an extended version of the JavaPlugin and
+ * contains for this plugin important functions and instances.
+ */
 public class main extends JavaPlugin
 {
-	/*	Angelegt am: 22.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Start des Plugins...
-	 * 	Erstellung verschiedener Instanz-Variabeln.	
-	 * 
-	 */	
-	
 	//	Instanz-Variabeln des Systems/Plugins.
 	public static Plugin PLUGIN;
 	
@@ -35,10 +34,16 @@ public class main extends JavaPlugin
 	public static MessageService MESSAGESERVICE;
 	public static Settings SETTINGS;
 
-	/***************************************/
+	/* ************************* */
 	/* ENABLE */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * This function is called when the plugin is getting enabled.
+	 * This function contains a version check which is used to enable the plugin if
+	 * the 'version.yml' and the plugin-version are compatible.
+	 * <b>The plugin can be disabled when the connection to the webservice is not given!</>
+	 */
 	@Override
 	public void onEnable() 
 	{
@@ -103,11 +108,11 @@ public class main extends JavaPlugin
 			}
 		}
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* DISABLE */
-	/***************************************/
-	
+	/* ************************* */
+
 	@Override
 	public void onDisable() 
 	{
@@ -124,12 +129,14 @@ public class main extends JavaPlugin
 		//	Ende.
 		Sys.of_sendMessage("Thanks for using this plugin!");
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
-	//	Eigene Dienste/Objekte initialisieren:
+	/* ************************* */
+
+	/**
+	 * This function initialize objects which are required for this plugin!
+	 */
 	private static void of_initSystemServices() 
 	{			
 		//	Das Objekt für die Übersetzungen initialisieren...
@@ -146,7 +153,12 @@ public class main extends JavaPlugin
 		//	Im Anschluss schauen, ob noch andere Komponenten gefordert sind und ob diese zur Verfügung stehen.
 		of_checkExternComponents();
 	}
-	
+
+	/**
+	 * This function checks if external components are registered.
+	 * For example: if the SETTINGS-object is using the PlaceholderAPI this function
+	 * checks if the plugin is on the server.
+	 */
 	private static void of_checkExternComponents() 
 	{
 		//	Schauen ob die PlaceholderAPI verwendet wird...
@@ -187,11 +199,15 @@ public class main extends JavaPlugin
 			}
 		}
 	}
-	
-	/***************************************/
-	/* SONSTIEGES */
-	/***************************************/
-	
+
+	/* ************************* */
+	/* SONSTIGES */
+	/* ************************* */
+
+	/**
+	 * This function sends a status report to the console after
+	 * successfully loading all objects or required methods for the plugin.
+	 */
 	private static void of_printStatusReport2Console() 
 	{
 		//	Farbcodes

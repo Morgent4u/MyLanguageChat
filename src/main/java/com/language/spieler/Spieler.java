@@ -5,16 +5,15 @@ import org.bukkit.entity.Player;
 
 import com.language.ancestor.Objekt;
 
+/**
+ * @Created 20.03.2022
+ * @Author Nihar
+ * @Description
+ * This class is used to represent a player for
+ * this plugin.
+ */
 public class Spieler extends Objekt
 {
-	/*	Angelegt am: 20.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Diese Klasse dient als Objekt-Ahne.
-	 * 	Mithilfe dieser Klasse werden Objekte erstellt.
-	 * 	
-	 */
-	
 	//	Extra-Attribute:
 	Player p;
 	
@@ -22,23 +21,25 @@ public class Spieler extends Objekt
 	String name;
 	String uuid;
 	String defaultLanguage;
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* CONSTRUCTOR */
-	/***************************************/
-	
-	public Spieler() { }
-	
+	/* ************************************* */
+
+	/**
+	 * Constructor
+	 * @param p Player instance.
+	 */
 	public Spieler(Player p)
 	{
 		this.p = p;
 		this.name = p.getName();
 		this.uuid = p.getUniqueId().toString();
 	}
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* SETTER // ADDER // REMOVER */
-	/***************************************/
+	/* ************************************* */
 	
 	public void of_setName(String name) 
 	{
@@ -54,13 +55,13 @@ public class Spieler extends Objekt
 	{
 		this.defaultLanguage = defaultLanguage;
 		
-		//	Sprache ggf. zum Translations-Objekt hinzuf�gen...
+		//	Sprache ggf. zum Translations-Objekt hinzufuegen...
 		main.TRANSLATION.of_addLanguageAsCurrentLanguage(defaultLanguage);
 	}
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* GETTER */
-	/***************************************/
+	/* ************************************* */
 	
 	public Player of_getPlayer() 
 	{
@@ -81,10 +82,10 @@ public class Spieler extends Objekt
 	{
 		return defaultLanguage;
 	}
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* BOOLS */
-	/***************************************/
+	/* ************************************* */
 	
 	public boolean of_hasDefaultPermissions() 
 	{

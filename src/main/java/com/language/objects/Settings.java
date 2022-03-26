@@ -8,16 +8,26 @@ import com.language.main.main;
 import com.language.sys.Sys;
 import com.language.utils.Datei;
 
+/**
+ * @Created 22.03.2022
+ * @Author Nihar
+ * @Description
+ * This object represents the settings.yml.
+ * All settings which are made in the settings.yml will be
+ * defined in this settings-object.
+ * This object also creates the settings.yml if it does not exist.
+ *
+ */
 public class Settings extends Objekt
 {
 	//	Attribute:
 	HashMap<String, String> supportedLanguages = new HashMap<String, String>();
 	Datei datei;
 	
-	String defaultLangauge;
+	String defaultLanguage;
 	String chatDesign;
 	String noSeparateChat_defaultLanguage;
-	String chatTranslateSymbole;
+	String chatTranslateSymbol;
 	
 	boolean ib_useLanguage;
 	boolean ib_useVault;
@@ -27,19 +37,23 @@ public class Settings extends Objekt
 	boolean ib_useMySQL;
 	boolean ib_useChatTranslateSymbole;
 	boolean ib_translateEveryMessage2DefaultLanguage;
-	
-	/***************************************/
+
+	/* ************************* */
 	/* CONSTRUCTOR */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * Constructor
+	 * @param directoryPath This is the path where the settings.yml is stored.
+	 */
 	public Settings(String directoryPath) 
 	{
 		datei = new Datei(directoryPath+"settings.yml");
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* LOADER // UNLOADER */
-	/***************************************/
+	/* ************************* */
 	
 	@Override
 	public int of_load() 
@@ -58,7 +72,7 @@ public class Settings extends Objekt
 		if(ib_useLanguage) 
 		{
 			//	Settings:
-			defaultLangauge = datei.of_getSetString(sectionKey + ".Settings.DefaultLanguage", "EN").toLowerCase();
+			defaultLanguage = datei.of_getSetString(sectionKey + ".Settings.DefaultLanguage", "EN").toLowerCase();
 			ib_useVault = datei.of_getSetBoolean(sectionKey + ".Settings.UseVault", true);
 			ib_usePlaceholderAPI = datei.of_getSetBoolean(sectionKey + ".Settings.UsePlaceholderAPI", false);
 			ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
@@ -69,8 +83,8 @@ public class Settings extends Objekt
 			noSeparateChat_defaultLanguage = datei.of_getSetString(sectionKey+".Chat.GlobalTranslatedChat.DefaultLanguage", "EN").toLowerCase();
 			
 			//	Translations:
-			chatTranslateSymbole = datei.of_getSetString(sectionKey + ".Translation.OnlyTranslateBySymbole", "none");
-			ib_useChatTranslateSymbole = !chatTranslateSymbole.equals("none");
+			chatTranslateSymbol = datei.of_getSetString(sectionKey + ".Translation.OnlyTranslateBySymbole", "none");
+			ib_useChatTranslateSymbole = !chatTranslateSymbol.equals("none");
 			ib_translateEveryMessage2DefaultLanguage = datei.of_getSetBoolean(sectionKey+".Translation.TranslateEveryMessage2UserLanguage", false);
 			String[] supportedLanguages = new String[] {"EN - English", "NL - Netherlands", "FI - Finnland", "FR - France", "DE - Germany", "GR - Greece", "HU - Hungary", "IE - Ireland", "IT - Italy", "JP - Japan", "PL - Poland", "PT - Portugal", "RU - Russia", "ES - Spain", "SE - Sweden", "TR - Turkey", "UA - Ukraine"};
 			supportedLanguages = datei.of_getSetStringArray(sectionKey + ".Translation.Languages", supportedLanguages);
@@ -127,12 +141,18 @@ public class Settings extends Objekt
 		
 		return rc;
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
-	public void of_normalizeLanguageArray4HashMapEntries(String[] languageArray) 
+	/* ************************* */
+
+	/**
+	 * This function is only used for this specific settings.
+	 * It transfers the values of a string array into a hashmap with
+	 * keys and values.
+	 * @param languageArray Array which will be transfer to the HashMap
+	 */
+	private void of_normalizeLanguageArray4HashMapEntries(String[] languageArray)
 	{
 		if(languageArray != null && languageArray.length > 0) 
 		{
@@ -141,12 +161,12 @@ public class Settings extends Objekt
 				String[] splittedFragments = languageArray[i].split("-");
 				
 				//	Sicherstellen, dass alle Angaben passen...
-				if(splittedFragments != null && splittedFragments.length == 2) 
+				if(splittedFragments.length == 2)
 				{
 					supportedLanguages.put(splittedFragments[0].toLowerCase().trim(), splittedFragments[1].trim());
 				}
 				//	ggf. hat der Anwender was am Design nicht verstanden, des wegen dennoch das L�nderk�rzel ermitteln...
-				else if(splittedFragments != null && splittedFragments.length == 1) 
+				else if(splittedFragments.length == 1)
 				{
 					supportedLanguages.put(splittedFragments[0].toLowerCase().trim(), "No countryname");
 				}
@@ -158,10 +178,10 @@ public class Settings extends Objekt
 			}
 		}
 	}
-	
-	/***************************************/
-	/* DEBUG-CENTER */
-	/***************************************/
+
+	/* ************************* */
+	/* DEBUG - CENTER */
+	/* ************************* */
 	
 	@Override
 	public void of_sendDebugDetailInformation() 
@@ -172,10 +192,10 @@ public class Settings extends Objekt
 		Sys.of_sendMessage("UsePlaceholderAPI-Enabled: "+ of_isUsingPlaceholderAPI());
 		Sys.of_sendMessage("OwnWebservice-Enabled: "+of_isUsingOwnWebservice());
 		Sys.of_sendMessage("Chat-Design: "+of_getChatDesign().replace("�", "&"));
-		Sys.of_sendMessage("OnlyTranslateBySymbole: "+of_isUsingChatSymbole());
-		Sys.of_sendMessage("OnlyTranslateBySymbole-Symbole: "+of_getChatTranslateSymbole());
-		Sys.of_sendMessage("GlobalTranslatedChat: "+!of_isUsingSeperateChats());
-		Sys.of_sendMessage("GlobalTranslatedChat-DefaultLanguage: "+of_getDefaultLanguage4NoSperatechat());
+		Sys.of_sendMessage("OnlyTranslateBySymbole: "+ of_isUsingChatSymbol());
+		Sys.of_sendMessage("OnlyTranslateBySymbole-Symbole: "+ of_getChatTranslateSymbol());
+		Sys.of_sendMessage("GlobalTranslatedChat: "+!of_isUsingSeparateChats());
+		Sys.of_sendMessage("GlobalTranslatedChat-DefaultLanguage: "+ of_getDefaultLanguage4NoSparatechat());
 		Sys.of_sendMessage("TranslateEveryMessage2UserLanguage: "+of_isUsingTranslateEveryMessage2UserLanguage());
 		Sys.of_sendMessage("MySQL-Enabled: "+of_isUsingMySQL());
 		
@@ -184,8 +204,10 @@ public class Settings extends Objekt
 			Sys.of_sendMessage("MySQL-Connected: "+main.SQL.of_isConnected());
 		}
 	}
-	
-	//	Debug bzgl. den geladenenen Sprachen ausgeben...
+
+	/**
+	 * This function is a special debug-function for the stored languages in the hashmap of this object.
+	 */
 	public void of_sendDebug4Languages() 
 	{
 		Sys.of_debug("Loaded languages with countrycode ("+supportedLanguages.size()+"):");
@@ -195,10 +217,10 @@ public class Settings extends Objekt
 			Sys.of_debug("Countrycode: " + countryCode.toUpperCase() + " | Language: " + supportedLanguages.get(countryCode));
 		}
 	}
-	
-	/***************************************/
-	/* SETTER */
-	/***************************************/
+
+	/* ******************************* */
+	/* SETTER // ADDER // REMOVER */
+	/* ******************************* */
 	
 	public void of_setUseMySQL(boolean bool) 
 	{
@@ -217,23 +239,23 @@ public class Settings extends Objekt
 	
 	public void of_setDefaultLanguage(String defaultLanguage) 
 	{
-		this.defaultLangauge = defaultLanguage;
+		this.defaultLanguage = defaultLanguage;
 	}
 	
-	public void of_setTranslationSymbole(String symbole) 
+	public void of_setTranslationSymbol(String symbole)
 	{
-		chatTranslateSymbole = symbole;
-		ib_useChatTranslateSymbole = ( symbole.toLowerCase().equals("none") ) ? false : true;
+		chatTranslateSymbol = symbole;
+		ib_useChatTranslateSymbole = !symbole.toLowerCase().equals("none");
 	}
 	
 	public void of_setTranslateEveryMessage2DefaultUserLanguage(boolean bool) 
 	{
 		ib_translateEveryMessage2DefaultLanguage = bool;
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* GETTER */
-	/***************************************/
+	/* ************************* */
 	
 	public Datei of_getSettingsFile() 
 	{
@@ -250,36 +272,36 @@ public class Settings extends Objekt
 		return supportedLanguages.keySet().toArray(new String[0]);
 	}
 	
-	public String of_getChatTranslateSymbole() 
+	public String of_getChatTranslateSymbol()
 	{
-		return chatTranslateSymbole;
+		return chatTranslateSymbol;
 	}
-	
-	public String of_getDefaultLanguage4NoSperatechat() 
+
+	public String of_getDefaultLanguage4NoSparatechat()
 	{
 		return noSeparateChat_defaultLanguage;
 	}
-	
-	public String of_getChatDesign() 
+
+	public String of_getChatDesign()
 	{
 		return chatDesign;
 	}
 	
 	public String of_getDefaultLanguage() 
 	{
-		return defaultLangauge;
+		return defaultLanguage;
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* BOOLS */
-	/***************************************/
+	/* ************************* */
 	
 	public boolean of_isUsingMySQL() 
 	{
 		return ib_useMySQL;
 	}
 	
-	public boolean of_isUsingSeperateChats() 
+	public boolean of_isUsingSeparateChats()
 	{
 		return ib_useSeparateChat;
 	}
@@ -299,7 +321,7 @@ public class Settings extends Objekt
 		return ib_useLanguage;
 	}
 	
-	public boolean of_isUsingChatSymbole() 
+	public boolean of_isUsingChatSymbol() 
 	{
 		return ib_useChatTranslateSymbole;
 	}

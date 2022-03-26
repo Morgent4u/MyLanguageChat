@@ -6,49 +6,57 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * @Created 21.03.2022
+ * @Author Niha
+ * @Description
+ * This class contains all events which are necessary for the player
+ * and this plugin.
+ */
 public class ue_spieler implements Listener
 {
-	/*	Angelegt am: 21.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Alle Events im Zusammenhang mit dem �bersetzen.
-	 * 	(Hier sollte nur das ChatEvent sein :D)
-	 * 	
+	/**
+	 * The AsyncPlayerChatEvent is used to interact with the player messages.
+	 * @param event Event instance.
 	 */
-	
 	@EventHandler
-	public void ue_asyncPlayerChat4MyLanguageChat(AsyncPlayerChatEvent e) 
+	public void ue_asyncPlayerChat4MyLanguageChat(AsyncPlayerChatEvent event)
 	{
-		//	D�rfen wir �bersetzen?
+		//	Dürfen wir uebersetzen?
 		if(main.SETTINGS.of_isUsingLanguage())
 		{
-			e.setCancelled(true);
+			event.setCancelled(true);
 			
-			String playerName = e.getPlayer().getName();
-			String message = e.getMessage();
+			String playerName = event.getPlayer().getName();
+			String message = event.getMessage();
 			boolean translate = false;
-			
+
 			//	Wenn kein Symbol gefordert wird...
-			if(!main.SETTINGS.of_isUsingChatSymbole())
+			if(!main.SETTINGS.of_isUsingChatSymbol())
 			{
 				translate = true;
 			}
+
 			//	Symbol ist gefordert!
-			else if(e.getMessage().startsWith(main.SETTINGS.of_getChatTranslateSymbole()))
+			else if(event.getMessage().startsWith(main.SETTINGS.of_getChatTranslateSymbol()))
 			{
 				translate = true;
-				message = message.replaceFirst(main.SETTINGS.of_getChatTranslateSymbole(), "");
+				message = message.replaceFirst(main.SETTINGS.of_getChatTranslateSymbol(), "");
 			}
 			
 			main.TRANSLATION.of_translateMessageAndSend2AllPlayers(playerName, message, translate);
 			main.PLUGIN.getLogger().info(playerName + ": " + message);
 		}
 	}
-	
+
+	/**
+	 * This event is used to interact with the player while connecting to the server.
+	 * @param event Event instance.
+	 */
 	@EventHandler
-	public void ue_joinPlayer4MyLanguageChat(PlayerJoinEvent e) 
+	public void ue_joinPlayer4MyLanguageChat(PlayerJoinEvent event)
 	{
 		//	Spieler zum System anmelden...
-		main.SPIELERSERVICE.CONTEXT.of_loadPlayer(e.getPlayer());
+		main.SPIELERSERVICE.CONTEXT.of_loadPlayer(event.getPlayer());
 	}
 }

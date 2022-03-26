@@ -5,23 +5,22 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import com.language.ancestor.Objekt;
 import net.milkbowl.vault.permission.Permission;
 
+/**
+ * @Created 18.10.2021
+ * @Author Nihar
+ * @Description
+ * This class is used to represent vault-objects.
+ * In this case the PERMISSIONS-Object is used from the plugin vault.
+ */
+
 public class Vault extends Objekt
 {
-	/*	Angelegt am: 18.10.2021
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Diese Klasse wird bent�igt um Chatgruppen
-	 * 	im Chat anzuzeigen. Dazu z�hlt z.B. PermissionsEx oder
-	 * 	luckyPerms.
-	 * 
-	 */
-	
-	/***************************************/
-	/* Constructor // Loader */
-	/***************************************/
-	
 	public Permission PERMISSIONS;
-	
+
+	/* ************************************* */
+	/* LOADER */
+	/* ************************************* */
+
 	@Override
 	public int of_load()
 	{
@@ -29,7 +28,8 @@ public class Vault extends Objekt
 		{
 			//	VAULT-API Permissions-Klasse registrieren zum Plugin!
 	        RegisteredServiceProvider<Permission> registerClassPermission = main.PLUGIN.getServer().getServicesManager().getRegistration(Permission.class);
-	        PERMISSIONS = registerClassPermission.getProvider();
+			assert registerClassPermission != null;
+			PERMISSIONS = registerClassPermission.getProvider();
 	        return 1;
 		}
 		catch (Exception e)

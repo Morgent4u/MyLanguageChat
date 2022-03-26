@@ -8,29 +8,36 @@ import org.bukkit.entity.Player;
 import com.language.sys.Sys;
 import com.language.utils.Datei;
 
+/**
+ * @Created 21.03.2022
+ * @Author Nihar
+ * @Description
+ * This class creates for every player an
+ * object-instance from type Spieler.
+ * Further this class is used to save player data into
+ * the database or the file-system.
+ */
 public class SpielerContext
 {
-	/*	Angelegt am: 21.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Hier wird f�r jeden Spieler eine Instanz erstellt.
-	 * 	Zus�tzlich wird hier zwischen DB und FileSystem unterschieden.
-	 * 	
-	 */
-	
 	//	Attribute:
 	private HashMap<String, Spieler> players = new HashMap<String, Spieler>();
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* CONSTRUCTOR */
-	/***************************************/
+	/* ************************************* */
 	
 	public SpielerContext() { }
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* LOADER */
-	/***************************************/
-	
+	/* ************************************* */
+
+	/**
+	 * This function registers a player to this plugin.
+	 * The player data will be load by using the database or the
+	 * file-system.
+	 * @param p Player instance.
+	 */
 	public void of_loadPlayer(Player p) 
 	{
 		if(!players.containsKey(p.getName())) 
@@ -95,12 +102,16 @@ public class SpielerContext
 			players.put(p.getName(), ps);
 		}
 	}
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
-	//	Neuen Datenbank-Spieler anlegen...
+	/* ************************************* */
+
+	/**
+	 * This function is used to add a new player to the database.
+	 * @param p Player instance.
+	 * @return N = SUCCESS, -1 = ERROR
+	 */
 	private int of_createNewPlayerEntry2Database(Player p) 
 	{
 		int dbId = main.SQL.of_updateKey("mlc_user");
@@ -118,7 +129,14 @@ public class SpielerContext
 		
 		return -1;
 	}
-	
+
+	/**
+	 * This function stores the player data into the database or
+	 * the file-system. It also swaps to the file-system if no
+	 * database connection is given.
+	 * @param ps Own instance of the player (Spieler).
+	 * @return 1 = SUCCESS, -1 = ERROR
+	 */
 	public int of_savePlayer(Spieler ps) 
 	{
 		if(ps != null) 
@@ -128,7 +146,7 @@ public class SpielerContext
 			{
 				//	Update-Statement:
 				String sqlUpdate = "UPDATE mlc_user SET name = '"+ps.of_getName()+"', defaultLanguage = '"+ps.of_getDefaultLanguage()+"' WHERE mlc_user.user = " + ps.of_getTargetId() + ";";
-				boolean bool = main.SQL.of_run_update_supress(sqlUpdate);
+				boolean bool = main.SQL.of_run_update_suppress(sqlUpdate);
 				
 				//	Bei einem Fehler, wechsel zum FileSystem!
 				if(!bool) 
@@ -158,15 +176,20 @@ public class SpielerContext
 		
 		return -1;
 	}
-	
+
+	/**
+	 * Overload of the function of_savePlayer(Spieler).
+	 * @param playerName Playername
+	 * @return 1 = SUCCESS, -1 = ERROR
+	 */
 	public int of_savePlayer(String playerName) 
 	{
 		return of_savePlayer(players.get(playerName));
 	}
-	
-	/***************************************/
+
+	/* ************************************* */
 	/* GETTER */
-	/***************************************/
+	/* ************************************* */
 	
 	public Collection<Spieler> of_getAllSpieler() 
 	{

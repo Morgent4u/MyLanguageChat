@@ -10,32 +10,44 @@ import com.language.sys.Sys;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
+/**
+ * @Created 26.03.2022
+ * @Author Nihar
+ * @Description
+ * This object is used to translate the messages to the
+ * user language. It also stores the supported languages.
+ */
 public class Translation extends Objekt
 {
-	/*	Angelegt am: 21.03.2022
-	 * 	Erstellt von: Nihar
-	 * 	Beschreibung:
-	 * 	Mechanik f�r das �bersetzen von Chat-Nachrichten.
-	 * 	
-	 */
-	
 	//	Attribute:
 	String[] currentLanguages = new String[0];
 	String chatFormat;
-	
-	/***************************************/
-	/* CONSTRUCOTR */
-	/***************************************/
-	
+
+	/* ************************* */
+	/* CONSTRUCTOR */
+	/* ************************* */
+
+	/**
+	 * Constructor
+	 * @param chatFormat A string with a predefined chat-format.
+	 *                   For example: '&8[&c%group%&8]&a %p%&f:&7 %message%'
+	 */
 	public Translation(String chatFormat) 
 	{
 		this.chatFormat = chatFormat;
 	}
-	
-	/***************************************/
+
+	/* ************************* */
 	/* OBJEKT-ANWEISUNGEN */
-	/***************************************/
-	
+	/* ************************* */
+
+	/**
+	 * This function translates the user message into all supported languages and
+	 * sends it to the specific language of other players.
+	 * @param playerName Player name of the player which sends the text-message.
+	 * @param message Text-message
+	 * @param useTranslation Translate the text-message.
+	 */
 	public void of_translateMessageAndSend2AllPlayers(String playerName, String message, boolean useTranslation) 
 	{
 		Spieler ps = main.SPIELERSERVICE.CONTEXT.of_getSpieler(playerName);
@@ -81,7 +93,7 @@ public class Translation extends Objekt
 			if(useTranslation) 
 			{
 				//	Gibt es mehrere Sprachen?
-				if(main.SETTINGS.of_isUsingSeperateChats()) 
+				if(main.SETTINGS.of_isUsingSeparateChats())
 				{
 					//	Sprache �bersetzen und in einem Array erhalten.
 					String[] translatedTexts = of_translateTextIntoAllSupportedLanguages(message, ps.of_getDefaultLanguage());
@@ -103,7 +115,7 @@ public class Translation extends Objekt
 				//	Keine Separaten Chats, ein Einheitlicher Chat in einer Sprache!
 				else 
 				{
-					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, main.SETTINGS.of_getDefaultLanguage4NoSperatechat());
+					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, main.SETTINGS.of_getDefaultLanguage4NoSparatechat());
 					translatedText = chatFormat.replace("%message%", translatedText);
 					
 					for(Spieler ds : players) 
@@ -123,7 +135,15 @@ public class Translation extends Objekt
 			}
 		}
 	}
-	
+
+	/**
+	 * This function translates the text-message into all supported languages.
+	 * @param translateText Text-message
+	 * @param sourceLanguage The language in which the parameter 'translateText' has been written.
+	 *                       For example: sourceLanguage = 'EN'
+	 *                       Translate text: 'Hello how are you?'
+	 * @return A string array which contains the translated messages, in the order of the supported languages array.
+	 */
 	public String[] of_translateTextIntoAllSupportedLanguages(String translateText, String sourceLanguage) 
 	{
 		if(currentLanguages != null) 
@@ -155,11 +175,15 @@ public class Translation extends Objekt
 		
 		return null;
 	}
-	
-	/***************************************/
-	/* ADDER // REMOVER */
-	/***************************************/
-	
+
+	/* ***************************** */
+	/* SETTER // ADDER // REMOVER */
+	/* ***************************** */
+
+	/**
+	 * Add a language as current supported language.
+	 * @param language Language country code. For example: 'EN'
+	 */
 	public void of_addLanguageAsCurrentLanguage(String language) 
 	{
 		boolean bool = false;
@@ -178,10 +202,41 @@ public class Translation extends Objekt
 			currentLanguages = Sys.of_addArrayValue(currentLanguages, language);
 		}
 	}
-	
-	//	Man kann nicht das Array durchlaufen und anschlie�end werte rauswerfen...
+
+	/**
+	 * This function removes a language or country code from the supported languages.
+	 * @param language Language country code. For example: 'EN'
+	 */
 	public void of_removeLanguageFromCurrentLanguages(String language) 
 	{
 		currentLanguages = Sys.of_removeArrayValue(currentLanguages, language);
+	}
+
+	/* ************************* */
+	/* BOOLS */
+	/* ************************* */
+
+	/**
+	 * Is used to check if the language is supported or does not exist.
+	 * @param language The country code for example: DE or EN
+	 * @return TRUE = For this country code is a language defined. FALSE = For this country code is no language defined!
+	 */
+	public boolean of_languageIsSupported(String language)
+	{
+		String[] languages = main.SETTINGS.of_getSupportedLanguages();
+
+		if(languages != null && languages.length > 0)
+		{
+			for (String s : languages)
+			{
+				//	Hat der Spieler ein Ländercode eingegeben?
+				if (s.equalsIgnoreCase(language))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
