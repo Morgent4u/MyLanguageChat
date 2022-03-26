@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import com.language.objects.Text;
 import com.language.spieler.Spieler;
 import com.language.sys.Sys;
+import org.jetbrains.annotations.NotNull;
 
 public class CMD_Language implements CommandExecutor
 {
@@ -22,7 +23,7 @@ public class CMD_Language implements CommandExecutor
 	 */
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args)
+	public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String arg, String[] args)
 	{
 		if(cmd.getName().equalsIgnoreCase("Language")) 
 		{
@@ -58,41 +59,42 @@ public class CMD_Language implements CommandExecutor
 								Text txt = new Text("txt_supported_languages", ps.of_getPlayer());
 								txt.of_addReplacement("%p%", ps.of_getName());
 								String[] messages = txt.of_getText();
+								String n = "Test";
 								
 								//	Text auf folgendes Format überprüfen...
 								//  FORMAT=&7%countrycode% - &a%language%
 								if(messages != null && messages.length > 0) 
 								{
 									Player p = ps.of_getPlayer();
-									
-									for(int i = 0; i< messages.length; i++) 
+
+									for (String message : messages)
 									{
 										//	Nachricht in ein bestimmtes Format ausgeben...
-										if(messages[i].startsWith("FORMAT=")) 
+										if (message.startsWith("FORMAT="))
 										{
-											String replacedText = messages[i].replace("FORMAT=", "");
-											
+											String replacedText = message.replace("FORMAT=", "");
+
 											//	Alle Sprachen durchlaufen...
 											HashMap<String, String> languages = main.SETTINGS.of_getSupportedLanguagesWithFullNames();
-											
-											if(languages != null && languages.size() > 0) 
+
+											if (languages != null && languages.size() > 0)
 											{
-												for(String countryCode : languages.keySet()) 
+												for (String countryCode : languages.keySet())
 												{
 													p.sendMessage(replacedText.replace("%countrycode%", countryCode.toUpperCase()).replace("%language%", languages.get(countryCode)));
 												}
 											}
 										}
 										//	Sound abspielen...
-										else if(messages[i].startsWith("PLAYSOUND=")) 
+										else if (message.startsWith("PLAYSOUND="))
 										{
-											String playSound = messages[i].replace("PLAYSOUND=", "").toLowerCase();
-											p.playSound(p.getLocation(), playSound, 1, 1);	
+											String playSound = message.replace("PLAYSOUND=", "").toLowerCase();
+											p.playSound(p.getLocation(), playSound, 1, 1);
 										}
 										//	Normale Nachricht
-										else 
+										else
 										{
-											p.sendMessage(messages[i]);											
+											p.sendMessage(message);
 										}
 									}
 								}
@@ -157,7 +159,7 @@ public class CMD_Language implements CommandExecutor
 							//	Das nächste Argument ist hoffentlich, ein Ländercode....
 							else 
 							{
-								boolean lb_languageFound = of_languageIsSupported(args[0]);
+								boolean lb_languageFound = main.TRANSLATION.of_languageIsSupported(args[0]);
 								
 								if(lb_languageFound) 
 								{
@@ -180,7 +182,7 @@ public class CMD_Language implements CommandExecutor
 							{
 								if(ps.of_hasSetupPermissions()) 
 								{
-									boolean lb_languageFound = of_languageIsSupported(args[1]);
+									boolean lb_languageFound = main.TRANSLATION.of_languageIsSupported(args[1]);
 									
 									if(lb_languageFound) 
 									{
@@ -204,7 +206,7 @@ public class CMD_Language implements CommandExecutor
 								if(ps.of_hasSetupPermissions()) 
 								{
 									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The translation-symbole has been changed to:§a " + args[1]);
-									main.SETTINGS.of_setTranslationSymbole(args[1]);
+									main.SETTINGS.of_setTranslationSymbol(args[1]);
 								}
 								else 
 								{
@@ -224,17 +226,21 @@ public class CMD_Language implements CommandExecutor
 		}
 		
 		return false;
-	}	
-	
-	/***************************/
-	/*	ANWEISUNGEN  */
-	/***************************/
-	
+	}
+
+	/* ************************* */
+	/* OBJEKT-ANWEISUNGEN */
+	/* ************************* */
+
+	/**
+	 * Sends a help-text to the admin (player).
+	 * @param p Player instance.
+	 */
 	private void of_sendHelpPage(Player p) 
 	{
 		p.sendMessage("§7══════════════");
 		p.sendMessage("");
-		p.sendMessage("§8[§c§l"+Sys.of_getProgrammVersion()+"§8]");
+		p.sendMessage("§8[§c§l"+Sys.of_getProgramVersion()+"§8]");
 		p.sendMessage("");
 		p.sendMessage("§fHello§d "+p.getName()+"§f!");
 		p.sendMessage("§fHere is a little help :)");
@@ -255,32 +261,16 @@ public class CMD_Language implements CommandExecutor
 		p.sendMessage("");
 		p.sendMessage("§7══════════════");
 	}
-	
-	//	Standard-Hilfetext!
+
+	/**
+	 * Sends a default help-text which is defined for default-players.
+	 * @param p Player instance.
+	 */
 	private void of_sendHelpPage2Player(Player p) 
 	{
 		//	Hilfetext an den Spieler übermitteln...
 		Text txt = new Text("txt_cmdhelper4user", p);
 		txt.of_addReplacement("%p%", p.getName());
 		txt.of_sendTranslatedText2Player();
-	}
-	
-	private boolean of_languageIsSupported(String language) 
-	{
-		String[] languages = main.SETTINGS.of_getSupportedLanguages();
-		
-		if(languages != null && languages.length > 0) 
-		{
-			for(int i = 0; i< languages.length; i++) 
-			{
-				//	Hat der Spieler ein Ländercode eingegeben?
-				if(languages[i].equalsIgnoreCase(language)) 
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
 	}
 }
