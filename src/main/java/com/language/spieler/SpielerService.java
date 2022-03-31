@@ -9,6 +9,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Collection;
+
 /**
  * @Created 21.03.2022
  * @Author Nihar
@@ -29,7 +31,7 @@ public class SpielerService extends Objekt
 	public SpielerService() { }
 
 	/* ************************************* */
-	/* LOADER */
+	/* LOADER // UNLOADER */
 	/* ************************************* */
 	
 	@Override
@@ -43,6 +45,24 @@ public class SpielerService extends Objekt
 		}
 		
 		return 1;
+	}
+
+	/**
+	 * Is used to save player data in the database or the file-system before
+	 * the server is reloading/stopping.
+	 */
+	@Override
+	public void of_unload()
+	{
+		if(CONTEXT != null)
+		{
+			Collection<Spieler> players = CONTEXT.of_getAllSpieler();
+			
+			for(Spieler ps : players)
+			{
+				CONTEXT.of_savePlayer(ps);
+			}
+		}
 	}
 
 	/* ************************************* */

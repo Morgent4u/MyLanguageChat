@@ -116,6 +116,12 @@ public class main extends JavaPlugin
 	@Override
 	public void onDisable() 
 	{
+		//	Spielerdaten speichern...
+		if(SPIELERSERVICE != null)
+		{
+			SPIELERSERVICE.of_unload();
+		}
+
 		if(SETTINGS != null && SETTINGS.of_isUsingMySQL() && SQL != null && SQL.of_isConnected()) 
 		{
 			SQL.of_closeConnection();
@@ -125,7 +131,7 @@ public class main extends JavaPlugin
 		{
 			WEBSERVICE.of_unload();
 		}
-		
+
 		//	Ende.
 		Sys.of_sendMessage("Thanks for using this plugin!");
 	}
