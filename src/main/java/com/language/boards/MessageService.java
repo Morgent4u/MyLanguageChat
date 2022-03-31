@@ -63,17 +63,17 @@ public class MessageService extends Objekt
 			{
 				for (String configKey : configKeys)
 				{
-					String lokalKey = args[0] + "." + configKey;
-					String tmpMessage = datei.of_getStringByKey(lokalKey);
+					String localKey = args[0] + "." + configKey;
+					String tmpMessage = datei.of_getString(localKey);
 
-					if (tmpMessage != null) {
+					if (tmpMessage != null)
+					{
 						//	Schon mal ein bisschen übersetzen :)
-						messages.put(lokalKey, tmpMessage);
+						messages.put(localKey, tmpMessage);
 					}
 				}
 			}
 		}
-
     }
 
 	/* ************************* */
@@ -137,28 +137,23 @@ public class MessageService extends Objekt
 	 */
 	private void of_createTemplateFile() 
 	{
-		//	AUTO-CREATE MODE :^)
-		datei.of_setAutoCreateMode(true);
-		
 		//	Settings:
 		prefix = datei.of_getSetString("Settings.prefix", "&8[&aMyLanguage&fChat&8]&f:&7");
 		prefix = prefix.replace("&", "§");
 		ib_alwaysPrefix = datei.of_getSetBoolean("Settings.alwaysPrefix", true);
 		
 		//	Messages:
-		datei.of_set("General.noPermissions", "&cYou do not have permissions to do that!");
-		datei.of_set("General.errorMessage", "&fHey &a%p%&f an error occurred! Error: &c%errorMessage%");
+		datei.of_getSetString("General.noPermissions", "&cYou do not have permissions to do that!");
+		datei.of_getSetString("General.errorMessage", "&fHey &a%p%&f an error occurred! Error: &c%errorMessage%");
 		
 		//	General:
-		datei.of_set("MyLanguageChat.languageSelected", "&fYou have selected the language: &a%language%");
-		datei.of_set("MyLanguageChat.languageNotFound", "&fThe language: &a%language%&f could not be found!");
+		datei.of_getSetString("MyLanguageChat.languageSelected", "&fYou have selected the language: &a%language%");
+		datei.of_getSetString("MyLanguageChat.languageNotFound", "&fThe language: &a%language%&f could not be found!");
 
 		//	Sounds:
-		datei.of_set("Sounds.noPermissions", "block.sand.fall");
-		datei.of_set("Sounds.languageSelected", "entity.item.pickup");
+		datei.of_getSetString("Sounds.noPermissions", "block.sand.fall");
+		datei.of_getSetString("Sounds.languageSelected", "entity.item.pickup");
 
-		//	Ende des AutoCreateMode
-		datei.of_setAutoCreateMode(false);
 		datei.of_save("MessageService.of_createTemplate();");
 		
 		//	Fehlende Texte hinzufügen...

@@ -373,7 +373,18 @@ public class Datei
 		
 		return keys;
 	}
-	
+
+	/**
+	 * This function is used to get a string value from
+	 * a configKey in the YML-file.
+	 * @param configKey Section in the .YML-File.
+	 * @return The value in the configKey.
+	 */
+	public String of_getString(String configKey)
+	{
+		return cfg.getString(configKey);
+	}
+
 	public int of_getIntByKey(String configKey) 
 	{
 		int value = -1;
