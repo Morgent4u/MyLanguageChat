@@ -12,13 +12,12 @@ import com.language.sys.Sys;
  * @Author Nihar
  * @Description
  * This object is used to create or edit
- * fast .YML-Files.
+ * fast '.YML'-Files.
  */
 public class Datei
 {
 	private File file;
 	private YamlConfiguration cfg;
-	private boolean ib_autoCreateMode;
 
 	/* ************************************* */
 	/* CONSTRUCTOR */
@@ -59,7 +58,7 @@ public class Datei
 	}
 
 	/* ************************************* */
-	/* DECONSTRUCTOR */
+	/* UNLOADER */
 	/* ************************************* */
 
 	/**
@@ -81,29 +80,8 @@ public class Datei
 		}
 	}
 
-	/**
-	 * This function is used to save the current file.
-	 * @param invoker Invoker name or system area which calls this function.
-	 */
-	public void of_save(String invoker)
-	{
-		//	RC:
-		//	 1: OK
-		//	-1: Fehler
-		
-		try
-		{
-			cfg.save(file);
-		}
-		catch (Exception e)
-		{
-			Sys.of_sendErrorMessage(e, "Datei", "of_save(String)", "Error while saving the file!");
-		}
-
-	}
-
 	/* ************************************* */
-	/* GETTER // SETTER */
+	/* GET-SET-Method */
 	/* ************************************* */
 
 	/**
@@ -250,35 +228,11 @@ public class Datei
 	}
 
 	/* ************************************* */
-	/* SETTER */
+	/* OBJEKT-ANWEISUNGEN */
 	/* ************************************* */
 
 	/**
-	 * This function sets the given value to the configKey-section.
-	 * @param configKey ConfigKey Section in the .YML
-	 * @param object Object which will be set.
-	 */
-	public void of_set(String configKey, Object object) 
-	{
-		if(cfg != null) 
-		{
-			if(object == null) 
-			{
-				Sys.of_sendErrorMessage(null, "Datei", "of_set(String, Object);", "The config-section-path is not valid! "+configKey);
-				return;
-			}
-			
-			if(ib_autoCreateMode && cfg.isSet(configKey)) 
-			{
-				return;
-			}
-			
-			cfg.set(configKey, object);
-		}
-	}
-
-	/**
-	 * This function deletes a whole directory or file.
+	 * This function deletes a whole directory or specific file.
 	 * @param directory Directory or file.
 	 */
 	public void of_deleteRecursive(File directory)
@@ -308,49 +262,62 @@ public class Datei
 	}
 
 	/* ************************************* */
-	/* DEBUG-CENTER */
+	/* SPEICHERUNG */
 	/* ************************************* */
 
 	/**
-	 * This function sends default debug-information to the console.
+	 * This function is used to save the current file.
+	 * @param invoker Invoker name or system area which calls this function.
 	 */
-	public void of_sendDebugDetailInformation()
+	public void of_save(String invoker)
 	{
-		//	Ausgabe bzgl. File
-		boolean containsFile = ( file != null );
-		System.out.println("File: "+containsFile);
-		
-		if(containsFile) 
+		//	RC:
+		//	 1: OK
+		//	-1: Fehler
+
+		try
 		{
-			System.out.println("FileName: "+file.getName());
-			System.out.println("FilePath: "+file.getAbsolutePath());
+			cfg.save(file);
 		}
-		
-		//	Ausgabe bzgl. CFG
-		boolean containsCfg = ( cfg != null );
-		System.out.println("Cfg: "+containsCfg);
-		System.out.println("AutoCreateMode: "+of_isAutoCreateModeEnabled());
+		catch (Exception e)
+		{
+			Sys.of_sendErrorMessage(e, "Datei", "of_save(String)", "Error while saving the file!");
+		}
 	}
 
 	/* ************************************* */
-	/* SETTER // ADDER */
+	/* SETTER // ADDER // REMOVER */
 	/* ************************************* */
-	
+
+	/**
+	 * This function sets the given value to the configKey-section.
+	 * @param configKey ConfigKey Section in the .YML
+	 * @param object Object which will be set.
+	 */
+	public void of_set(String configKey, Object object)
+	{
+		if(cfg != null)
+		{
+			if(object == null)
+			{
+				Sys.of_sendErrorMessage(null, "Datei", "of_set(String, Object);", "The config-section-path is not valid! "+configKey);
+				return;
+			}
+
+			cfg.set(configKey, object);
+		}
+	}
+
 	public void of_setFile(File file) 
 	{
 		this.file = file;
 	}
 
-	public void of_setConfig(YamlConfiguration cfg) 
+	public void of_setConfig(YamlConfiguration config)
 	{
-		this.cfg = cfg;
+		this.cfg = config;
 	}
-	
-	public void of_setAutoCreateMode(boolean bool) 
-	{
-		ib_autoCreateMode = bool;
-	}
-	
+
 	public void of_removeKeySection(String key) 
 	{
 		cfg.set(key, "");
@@ -366,14 +333,14 @@ public class Datei
 	 * @param configKey ConfigSection to the multiple lines.
 	 * @return String array with the multiple lines.
 	 */
-	public String[] of_getStringArrayByKey(String configKey) 
+	public String[] of_getStringArrayByKey(String configKey)
 	{
-		if(cfg != null) 
+		if(cfg != null)
 		{
-			try 
+			try
 			{
 				List<String> values = cfg.getStringList(configKey);
-				
+
 				//	Sicherstellen, dass die Liste nicht leer ist.
 				if(!values.isEmpty())
 				{
@@ -382,7 +349,7 @@ public class Datei
 			}
 			catch (Exception ignored) { }
 		}
-		
+
 		return null;
 	}
 
@@ -407,47 +374,10 @@ public class Datei
 		return keys;
 	}
 	
-	public String of_getStringByKey(String configKey) 
-	{
-		String value = null;
-		
-		if(cfg != null) 
-		{
-			try
-			{
-				value = cfg.getString(configKey);
-			}
-			catch (Exception ignored) { }
-		}
-		
-		return value;
-	}
-
-	/**
-	 * This function is used to generate an automatic index for this file.
-	 * @return Current keyCount or index value.
-	 */
-	public int of_getNextKey() 
-	{
-		int key = of_getIntByKey("KeyCount");
-		
-		if(key == -1) 
-		{
-			key = 0; 
-		}
-		
-		key++;
-		
-		of_set("KeyCount", key);
-		of_save("Datei.of_getNextKey();");
-		
-		return key;
-	}
-	
 	public int of_getIntByKey(String configKey) 
 	{
 		int value = -1;
-		
+
 		if(cfg != null) 
 		{
 			try
@@ -507,7 +437,21 @@ public class Datei
 		
 		return value;
 	}
-	
+
+	/**
+	 * This function is used to generate an automatic index for this file.
+	 * @return Current keyCount or index value.
+	 */
+	public int of_getNextKey()
+	{
+		int key = of_getSetInt("KeyCount", 0);
+		key++;
+
+		of_save("Datei.of_getNextKey();");
+
+		return key;
+	}
+
 	public File of_getFile() 
 	{
 		return file;
@@ -541,10 +485,5 @@ public class Datei
 		}
 		
 		return false;
-	}
-	
-	public boolean of_isAutoCreateModeEnabled() 
-	{
-		return ib_autoCreateMode;
 	}
 }
