@@ -21,7 +21,7 @@ public class Translation extends Objekt
 {
 	//	Attribute:
 	String[] currentLanguages = new String[0];
-	String chatFormat;
+	String mainChatFormat;
 
 	/* ************************* */
 	/* CONSTRUCTOR */
@@ -34,7 +34,7 @@ public class Translation extends Objekt
 	 */
 	public Translation(String chatFormat) 
 	{
-		this.chatFormat = chatFormat;
+		this.mainChatFormat = chatFormat;
 	}
 
 	/* ************************* */
@@ -57,7 +57,7 @@ public class Translation extends Objekt
 			Player p = ps.of_getPlayer();
 			
 			//	ChatFormat verwenden:
-			String chatFormat = main.SETTINGS.of_getChatDesign();
+			String chatFormat = of_getChatDesign();
 			
 			//	Wenn die PlaceholderAPI verwendet wird...
 			if(main.SETTINGS.of_isUsingPlaceholderAPI())
@@ -69,12 +69,16 @@ public class Translation extends Objekt
 			{
 				try
 				{
-					chatFormat = chatFormat.replace("%group%", main.VAULT.PERMISSIONS.getPrimaryGroup(p));			
+					//	Nur ersetzen, wenn auch der Platzhalter verwendet wird.
+					if(chatFormat.contains("%group%"))
+					{
+						chatFormat = chatFormat.replace("%group%", main.VAULT.PERMISSIONS.getPrimaryGroup(p));
+					}
 				}
 				catch (Exception e) 
 				{
-					Sys.of_sendWarningMessage("There was an error by using vault. Please disable vault in the 'settings.yml' or use a permissionssystem.");
-					chatFormat = main.SETTINGS.of_getChatDesign();
+					Sys.of_sendWarningMessage("There was an error by using vault. Please disable vault in the 'settings.yml' or use a permissions system (this is used for the groups).");
+					chatFormat = of_getChatDesign();
 				}
 			}
 			
@@ -84,7 +88,7 @@ public class Translation extends Objekt
 			//	Farbcodes?
 			if(ps.of_hasChatColorPermissions()) 
 			{
-				message = message.replace("&", "�");
+				message = message.replace("&", "§");
 			}
 			
 			//	Spieler ermitteln...
@@ -95,7 +99,7 @@ public class Translation extends Objekt
 				//	Gibt es mehrere Sprachen?
 				if(main.SETTINGS.of_isUsingSeparateChats())
 				{
-					//	Sprache �bersetzen und in einem Array erhalten.
+					//	Sprache uebersetzen und in einem Array erhalten.
 					String[] translatedTexts = of_translateTextIntoAllSupportedLanguages(message, ps.of_getDefaultLanguage());
 					
 					if(translatedTexts != null) 
@@ -124,7 +128,7 @@ public class Translation extends Objekt
 					}
 				}	
 			}
-			//	Normale Ausgabe des Textes, nicht �bersetzen (z.B. nur beim �bersetzen via. Chatsymbole)
+			//	Normale Ausgabe des Chats, ohne uebersetzung z.B. wenn ChatSymbol aktiviert ist und eine Nachricht ohne Symbol verschickt wird.
 			else 
 			{
 				for(Spieler ds : players) 
@@ -210,6 +214,14 @@ public class Translation extends Objekt
 	public void of_removeLanguageFromCurrentLanguages(String language) 
 	{
 		currentLanguages = Sys.of_removeArrayValue(currentLanguages, language);
+	}
+
+	/* ************************* */
+	/* GETTER */
+	/* ************************* */
+	private String of_getChatDesign()
+	{
+		return this.mainChatFormat;
 	}
 
 	/* ************************* */

@@ -51,7 +51,7 @@ public class main extends JavaPlugin
 		PLUGIN = this;
 		
 		//	Überprüfen ob die Versions-Nummer stimmt...
-		boolean lb_continue = Sys.of_isSystemVersionCompatible(PLUGIN.getName(), "22.1.0.01", "plugins");
+		boolean lb_continue = Sys.of_isSystemVersionCompatible(PLUGIN.getName(), "22.1.1.01", "plugins");
 		
 		if(lb_continue) 
 		{
