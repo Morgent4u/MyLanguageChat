@@ -98,9 +98,7 @@ public class Sys
 					//	Hinweis-Meldung ausgeben, dass die Dateien veraltet sind.
 					if(currentProgrammVersionNumber > oldProgrammVersionNumber) 
 					{
-						String red = "\u001B[31m";
-						String white = "\u001B[0m";
-						of_sendMessage(red+"This plugin-version is newer than your system files. This can possible cause some problems."+white);
+						of_sendWarningMessage("This plugin-version is newer than your system files. This can possible cause some problems.");
 					}
 					
 					//	Ist diese PL-Version eine Hotfix?
@@ -198,7 +196,7 @@ public class Sys
 	 * @param exception Exception (if no exception is given use NULL instead).
 	 * @param systemArea The system area or invoker-object which calls this function.
 	 * @param invoker The current function/method which is calling this function explicit.
-	 * @param errorMessage The error message which will be displayed. <b>This message should be easy to understand for the server owner.
+	 * @param errorMessage The error message which will be displayed. <b>This message should be easy to understand for the server owner</b>.
 	 */
 	public static void of_sendErrorMessage(Exception exception, String systemArea, String invoker, String errorMessage) 
 	{
@@ -211,7 +209,7 @@ public class Sys
 		Sys.of_sendMessage("=====================================");
 		Sys.of_sendMessage(red+"[ERROR] "+yellow+Sys.of_getProgramVersion()+white);
 		Sys.of_sendMessage(blue+"Hotfix: "+white+of_isHotfix());
-		Sys.of_sendMessage(blue+"Systemarea: "+white+systemArea);
+		Sys.of_sendMessage(blue+"System area: "+white+systemArea);
 		Sys.of_sendMessage(blue+"Invoker: "+white+invoker);
 		Sys.of_sendMessage(blue+"Error message:");
 		Sys.of_sendMessage(red+errorMessage);
@@ -254,7 +252,7 @@ public class Sys
 	}
 
 	/**
-	 * This function removes from the given array an element.
+	 * This function removes an element from the given array.
 	 * @param myArray Array of type string.
 	 * @param removeValue The value which should be removed from the given array.
 	 * @return Array with the removed element-value.
@@ -325,7 +323,7 @@ public class Sys
 	}
 
 	/**
-	 * This function is similar to the function of_getReplacedArrayList() but it's using an array instead.
+	 * This function is similar to the function of_getReplacedArrayList() but it is using an array-string, instead.
 	 * @param myArray Array of type string.
 	 * @param searchValue Search pattern.
 	 * @param replaceValue Replace value.
@@ -346,10 +344,10 @@ public class Sys
 
 	/**
 	 * This function gets the placeholder value of a replaced string by using the placeholder.
-	 * @param playerHolder Placeholder for example: '&8[&c%group%&8]'
-	 * @param symbol Placeholder start pattern for example: '%'
+	 * @param playerHolder Placeholder example: '&8[&c%group%&8]'
+	 * @param symbol Placeholder start pattern example: '%'
 	 * @param searchString String which has already the replaced placeholder. For example: '&8[&cAdmin&8]'
-	 * @return The placeholder value of the parameter 'searchString'. For this example: 'Admin'
+	 * @return The placeholder value of the parameter 'searchString'. For this example is the result: 'Admin'
 	 */
 	public static String of_getStringWithoutPlaceholder(String playerHolder, String symbol, String searchString)
 	{
@@ -550,7 +548,7 @@ public class Sys
 	/**
 	 * This function is used to check if a specific plugin is used on the server.
 	 * @param pluginName Plugin name.
-	 * @return TRUE = Server is using the give plugin. FALSE = Plugin not found.
+	 * @return TRUE = Server is using the given plugin. FALSE = Plugin not found.
 	 */
 	public static boolean of_check4SpecificPluginOnServer(String pluginName) 
 	{
