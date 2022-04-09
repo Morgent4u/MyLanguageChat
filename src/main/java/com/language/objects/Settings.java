@@ -38,6 +38,7 @@ public class Settings extends Objekt
 	boolean ib_useMySQL;
 	boolean ib_useChatTranslateSymbol;
 	boolean ib_translateEveryMessage2DefaultLanguage;
+	boolean ib_autoSelectLanguage;
 
 	/* ************************* */
 	/* CONSTRUCTOR */
@@ -74,6 +75,7 @@ public class Settings extends Objekt
 		{
 			//	Settings:
 			defaultLanguage = datei.of_getSetString(sectionKey + ".Settings.DefaultLanguage", "EN").toLowerCase();
+			ib_autoSelectLanguage = datei.of_getSetBoolean(sectionKey + ".Settings.AutoDetectLanguageOnFirstJoin", true);
 			ib_useVault = datei.of_getSetBoolean(sectionKey + ".Settings.UseVault", true);
 			ib_usePlaceholderAPI = datei.of_getSetBoolean(sectionKey + ".Settings.UsePlaceholderAPI", false);
 
@@ -191,6 +193,7 @@ public class Settings extends Objekt
 	{
 		Sys.of_sendMessage("MyLanguageChat-Enabled: "+of_isUsingLanguage());
 		Sys.of_sendMessage("DefaultLanguage: "+of_getDefaultLanguage());
+		Sys.of_sendMessage("AutoDetectLanguageOnFirstJoin: "+of_isUsingAutoSelectLanguage());
 		Sys.of_sendMessage("UseVault-Enabled: "+of_isUsingVault());
 		Sys.of_sendMessage("UsePlaceholderAPI-Enabled: "+ of_isUsingPlaceholderAPI());
 		Sys.of_sendMessage("OwnWebservice-Enabled: "+of_isUsingOwnWebservice());
@@ -362,5 +365,10 @@ public class Settings extends Objekt
 	public boolean of_isUsingPlaceholderAPI() 
 	{
 		return ib_usePlaceholderAPI;
+	}
+
+	public boolean of_isUsingAutoSelectLanguage()
+	{
+		return ib_autoSelectLanguage;
 	}
 }

@@ -158,12 +158,12 @@ public class CMD_Language implements CommandExecutor
 							//	Das nächste Argument ist hoffentlich, ein Ländercode....
 							else 
 							{
-								boolean lb_languageFound = main.TRANSLATION.of_languageIsSupported(args[0]);
-								
-								if(lb_languageFound) 
+								String displayLanguage = main.TRANSLATION.of_languageIsSupported(args[0]);
+
+								if(displayLanguage != null)
 								{
 									main.SPIELERSERVICE.of_swapLanguage(ps, args[0].toLowerCase());
-									main.MESSAGESERVICE.of_getMessage(ps.of_getPlayer(), "MyLanguageChat.languageSelected", new String[] {"%language%"}, new String[] {main.SETTINGS.of_getSupportedLanguagesWithFullNames().get(args[0].toLowerCase())});
+									main.MESSAGESERVICE.of_getMessage(ps.of_getPlayer(), "MyLanguageChat.languageSelected", new String[] {"%language%"}, new String[] {displayLanguage});
 								}
 								else 
 								{
@@ -181,11 +181,11 @@ public class CMD_Language implements CommandExecutor
 							{
 								if(ps.of_hasSetupPermissions()) 
 								{
-									boolean lb_languageFound = main.TRANSLATION.of_languageIsSupported(args[1]);
-									
-									if(lb_languageFound) 
+									String displayLanguage = main.TRANSLATION.of_languageIsSupported(args[1]);
+
+									if(displayLanguage != null)
 									{
-										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: Default-language has been changed to:§a " + main.SETTINGS.of_getSupportedLanguagesWithFullNames().get(args[1].toLowerCase()));
+										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: Default-language has been changed to:§a " + displayLanguage);
 										main.SETTINGS.of_setDefaultLanguage(args[1].toLowerCase());
 									}
 									else 
@@ -218,11 +218,11 @@ public class CMD_Language implements CommandExecutor
 							{
 								if(ps.of_hasSetupPermissions())
 								{
-									boolean lb_languageExists = main.TRANSLATION.of_languageIsSupported(args[1]);
+									String displayLanguage = main.TRANSLATION.of_languageIsSupported(args[1]);
 
-									if(lb_languageExists)
+									if(displayLanguage != null)
 									{
-										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The global-language has been changed to:§a " + main.SETTINGS.of_getSupportedLanguagesWithFullNames().get(args[1].toLowerCase()));
+										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The global-language has been changed to:§a " + displayLanguage);
 										main.SETTINGS.of_setGlobalTranslateLanguage(args[1]);
 									}
 									else

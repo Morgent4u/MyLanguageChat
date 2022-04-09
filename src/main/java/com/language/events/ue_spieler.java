@@ -1,10 +1,12 @@
 package com.language.events;
 
 import com.language.main.main;
+import com.language.spieler.Spieler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @Created 21.03.2022
@@ -56,7 +58,27 @@ public class ue_spieler implements Listener
 	@EventHandler
 	public void ue_joinPlayer4MyLanguageChat(PlayerJoinEvent event)
 	{
-		//	Spieler zum System anmelden...
-		main.SPIELERSERVICE.CONTEXT.of_loadPlayer(event.getPlayer());
+		int rc = main.SPIELERSERVICE.CONTEXT.of_loadPlayer(event.getPlayer());
+
+		//	If the player is new and we can check the player settings language... lets check it :)!
+		if(rc == 0 && main.SETTINGS.of_isUsingAutoSelectLanguage())
+		{
+			//	Run this task later because we need some seconds to identify the player settings language.
+			new BukkitRunnable()
+			{
+
+				@Override
+				public void run()
+				{
+					Spieler ps = main.SPIELERSERVICE.CONTEXT.of_getSpieler(event.getPlayer().getName());
+
+					if(ps != null)
+					{
+						main.SPIELERSERVICE.of_swapLanguage(ps, main.SPIELERSERVICE.of_getPlayerSettingsLanguageByPlayer(ps));
+					}
+				}
+
+			}.runTaskLater(main.PLUGIN, 20*3);
+		}
 	}
 }

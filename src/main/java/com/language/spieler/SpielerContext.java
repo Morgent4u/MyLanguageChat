@@ -37,8 +37,9 @@ public class SpielerContext
 	 * The player data will be load by using the database or the
 	 * file-system.
 	 * @param p Player instance.
+	 * @return 1 = SUCCESS, 0 = SUCCESS AND NEW PLAYER
 	 */
-	public void of_loadPlayer(Player p) 
+	public int of_loadPlayer(Player p)
 	{
 		if(!players.containsKey(p.getName())) 
 		{
@@ -46,7 +47,8 @@ public class SpielerContext
 			String uuid = p.getUniqueId().toString();
 			String defaultLanguage = null;
 			int dbId = -1;
-			
+			int rc = 1;
+
 			if(main.SETTINGS.of_isUsingMySQL()) 
 			{
 				//	Gibt es den Spieler bereits?
@@ -57,6 +59,7 @@ public class SpielerContext
 				{
 					//	Neuen Nutzer anlegen...
 					dbId = of_createNewPlayerEntry2Database(p);
+					rc = 0;
 				}
 				
 				//	Spieler-Inhalte laden...
@@ -73,7 +76,7 @@ public class SpielerContext
 					main.SQL.of_closeConnection();
 					
 					//	Switch zum FileSystem
-					of_loadPlayer(p);
+					return of_loadPlayer(p);
 				}
 			}
 			//	File-System:
@@ -81,6 +84,13 @@ public class SpielerContext
 			{
 				//	Spieler-Datei laden/erstellen
 				Datei userdata = new Datei(Sys.of_getMainFilePath()+"userdata//"+uuid+".yml");
+
+				//	We need to set the returnCode to 0 because this is used for the ue_spieler-Event!
+				if(!userdata.of_fileExists())
+				{
+					rc = 0;
+				}
+
 				userdata.of_set("Name", p.getName());
 				
 				//	Standard-Sprache ermitteln oder setzen...
@@ -100,7 +110,10 @@ public class SpielerContext
 			ps.of_setDefaultLanguage(defaultLanguage);
 			ps.of_setTargetId(dbId);
 			players.put(p.getName(), ps);
+			return rc;
 		}
+
+		return 1;
 	}
 
 	/* ************************************* */

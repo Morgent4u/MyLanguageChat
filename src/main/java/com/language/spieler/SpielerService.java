@@ -1,5 +1,7 @@
 package com.language.spieler;
 
+import com.language.main.main;
+import com.language.sys.Sys;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import com.language.ancestor.Objekt;
@@ -76,14 +78,11 @@ public class SpielerService extends Objekt
 	 */
 	public void of_swapLanguage(Spieler ps, String swapLanguage)
 	{
-		int rc = -1;
-		
 		if(ps != null) 
 		{
 			ps.of_setDefaultLanguage(swapLanguage);
-			rc = CONTEXT.of_savePlayer(ps);
+			CONTEXT.of_savePlayer(ps);
 		}
-
 	}
 
 	/**
@@ -102,5 +101,37 @@ public class SpielerService extends Objekt
 		tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CMD));
 		tc.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Hovertext).create()));
 		p.spigot().sendMessage(tc);
+	}
+
+	/* ************************************* */
+	/* GETTER */
+	/* ************************************* */
+
+	/**
+	 * This function checks the player client language which has been defined in the settings.
+	 * @param ps Player instance.
+	 * @return Language code of the language which the player uses. Or default language code.
+	 */
+	public String of_getPlayerSettingsLanguageByPlayer(Spieler ps)
+	{
+		if(ps != null)
+		{
+			Player p = ps.of_getPlayer();
+			String[] supportedCountries = main.SETTINGS.of_getSupportedLanguages();
+
+			//	p.getLocale() returns for example: de_de or es_mx
+			String playerSettingsLanguage = p.getLocale().split("_")[0];
+			Sys.of_debug("[Buggy]: "+ps.of_getPlayer().getName()+".playerSettingsLanguage = " + playerSettingsLanguage);
+
+			for(String language : supportedCountries)
+			{
+				if(language.equalsIgnoreCase(playerSettingsLanguage))
+				{
+					return language;
+				}
+			}
+		}
+
+		return main.SETTINGS.of_getDefaultLanguage();
 	}
 }

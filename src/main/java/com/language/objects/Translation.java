@@ -1,6 +1,7 @@
 package com.language.objects;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import com.language.main.main;
 import org.bukkit.entity.Player;
@@ -230,25 +231,31 @@ public class Translation extends Objekt
 
 	/**
 	 * Is used to check if the language is supported or does not exist.
-	 * @param language The country code for example: DE or EN
-	 * @return TRUE = For this country code is a language defined. FALSE = For this country code is no language defined!
+	 * @param language The country code for example: DE or EN or the display-name
+	 * @return The defined language-display name or null if it does not exist.
 	 */
-	public boolean of_languageIsSupported(String language)
+	public String of_languageIsSupported(String language)
 	{
-		String[] languages = main.SETTINGS.of_getSupportedLanguages();
+		HashMap<String, String> languages = main.SETTINGS.of_getSupportedLanguagesWithFullNames();
 
-		if(languages != null && languages.length > 0)
+		//	Check the key-entries:
+		for(String key : languages.keySet())
 		{
-			for (String s : languages)
+			if(key.equalsIgnoreCase(language))
 			{
-				//	Hat der Spieler ein Ländercode eingegeben?
-				if (s.equalsIgnoreCase(language))
-				{
-					return true;
-				}
+				return languages.get(key);
 			}
 		}
 
-		return false;
+		//	Check the real entries:
+		for(String value : languages.values())
+		{
+			if(value.equalsIgnoreCase(language))
+			{
+				return value;
+			}
+		}
+
+		return null;
 	}
 }
