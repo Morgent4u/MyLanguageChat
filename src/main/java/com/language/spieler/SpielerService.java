@@ -1,6 +1,7 @@
 package com.language.spieler;
 
 import com.language.main.main;
+import com.language.objects.Settings;
 import com.language.sys.Sys;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -117,7 +118,7 @@ public class SpielerService extends Objekt
 		if(ps != null)
 		{
 			Player p = ps.of_getPlayer();
-			String[] supportedCountries = main.SETTINGS.of_getSupportedLanguages();
+			String[] supportedCountries = Settings.of_getInstance().of_getSupportedLanguages();
 
 			//	p.getLocale() returns for example: de_de or es_mx
 			String playerSettingsLanguage = p.getLocale().split("_")[0];
@@ -132,6 +133,6 @@ public class SpielerService extends Objekt
 			}
 		}
 
-		return main.SETTINGS.of_getDefaultLanguage();
+		return Settings.of_getInstance().of_getDefaultLanguage();
 	}
 }

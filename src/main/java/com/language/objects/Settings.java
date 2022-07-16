@@ -21,6 +21,7 @@ import com.language.utils.Datei;
 public class Settings extends Objekt
 {
 	//	Attribute:
+	private static final Settings instance = new Settings();
 	HashMap<String, String> supportedLanguages = new HashMap<String, String>();
 	Datei datei;
 
@@ -44,11 +45,13 @@ public class Settings extends Objekt
 	/* CONSTRUCTOR */
 	/* ************************* */
 
+	private Settings() { }
+
 	/**
-	 * Constructor
+	 * Initialize important variables for this object.
 	 * @param directoryPath This is the path where the settings.yml is stored.
 	 */
-	public Settings(String directoryPath) 
+	public void of_init(String directoryPath)
 	{
 		datei = new Datei(directoryPath+"settings.yml");
 		sectionKey = Sys.of_getPaket();
@@ -78,9 +81,7 @@ public class Settings extends Objekt
 			ib_autoSelectLanguage = datei.of_getSetBoolean(sectionKey + ".Settings.AutoDetectLanguageOnFirstJoin", true);
 			ib_useVault = datei.of_getSetBoolean(sectionKey + ".Settings.UseVault", true);
 			ib_usePlaceholderAPI = datei.of_getSetBoolean(sectionKey + ".Settings.UsePlaceholderAPI", false);
-
-			// ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
-			ib_useOwnWebservice = false;
+			ib_useOwnWebservice = datei.of_getSetBoolean(sectionKey + ".Settings.OwnWebservice", false);
 
 			//	Chat:
 			chatDesign = datei.of_getSetString(sectionKey + ".Chat.Design", "&8[&c%group%&8]&a %p%&7: &f%message%").replace("&", "§");
@@ -287,7 +288,12 @@ public class Settings extends Objekt
 	/* ************************* */
 	/* GETTER */
 	/* ************************* */
-	
+
+	public static Settings of_getInstance()
+	{
+		return instance;
+	}
+
 	public Datei of_getSettingsFile() 
 	{
 		return datei;

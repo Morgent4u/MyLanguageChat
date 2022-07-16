@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.language.main.main;
+import com.language.objects.Settings;
 import org.bukkit.entity.Player;
 import com.language.sys.Sys;
 import com.language.utils.Datei;
@@ -49,7 +50,7 @@ public class SpielerContext
 			int dbId = -1;
 			int rc = 1;
 
-			if(main.SETTINGS.of_isUsingMySQL()) 
+			if(Settings.of_getInstance().of_isUsingMySQL()) 
 			{
 				//	Gibt es den Spieler bereits?
 				String sqlStatement = "SELECT user FROM mlc_user WHERE uuid = '"+uuid+"';";
@@ -72,7 +73,7 @@ public class SpielerContext
 				else 
 				{
 					//	Verbindung beenden...
-					main.SETTINGS.of_setUseMySQL(false);
+					Settings.of_getInstance().of_setUseMySQL(false);
 					main.SQL.of_closeConnection();
 					
 					//	Switch zum FileSystem
@@ -94,7 +95,7 @@ public class SpielerContext
 				userdata.of_set("Name", p.getName());
 				
 				//	Standard-Sprache ermitteln oder setzen...
-				defaultLanguage = userdata.of_getSetString("Language", main.SETTINGS.of_getDefaultLanguage());
+				defaultLanguage = userdata.of_getSetString("Language", Settings.of_getInstance().of_getDefaultLanguage());
 				
 				//	Interne SpielerID vergeben...
 				dbId = players.size() + 1;
@@ -104,7 +105,7 @@ public class SpielerContext
 			//	Zur Spieler-Instanz alle Attribute setzen.
 			if(defaultLanguage == null) 
 			{
-				defaultLanguage = main.SETTINGS.of_getDefaultLanguage();
+				defaultLanguage = Settings.of_getInstance().of_getDefaultLanguage();
 			}
 			
 			ps.of_setDefaultLanguage(defaultLanguage);
@@ -131,7 +132,7 @@ public class SpielerContext
 		
 		if(dbId > 0) 
 		{
-			String sqlInsert = "INSERT INTO mlc_user( user, name, uuid, defaultLanguage ) VALUES( "+dbId+", '"+p.getName()+"', '"+p.getUniqueId().toString()+"', '"+main.SETTINGS.of_getDefaultLanguage().toLowerCase()+"' );";
+			String sqlInsert = "INSERT INTO mlc_user( user, name, uuid, defaultLanguage ) VALUES( "+dbId+", '"+p.getName()+"', '"+p.getUniqueId().toString()+"', '"+Settings.of_getInstance().of_getDefaultLanguage().toLowerCase()+"' );";
 			boolean bool = main.SQL.of_run_update(sqlInsert);
 			
 			if(bool) 
@@ -155,7 +156,7 @@ public class SpielerContext
 		if(ps != null) 
 		{
 			//	Datenbank oder FileSystem?
-			if(main.SETTINGS.of_isUsingMySQL()) 
+			if(Settings.of_getInstance().of_isUsingMySQL()) 
 			{
 				//	Update-Statement:
 				String sqlUpdate = "UPDATE mlc_user SET name = '"+ps.of_getName()+"', defaultLanguage = '"+ps.of_getDefaultLanguage()+"' WHERE mlc_user.user = " + ps.of_getTargetId() + ";";
@@ -165,7 +166,7 @@ public class SpielerContext
 				if(!bool) 
 				{
 					//	Verbindung beenden...
-					main.SETTINGS.of_setUseMySQL(false);
+					Settings.of_getInstance().of_setUseMySQL(false);
 					main.SQL.of_closeConnection();
 					
 					//	Switch zum FileSystem

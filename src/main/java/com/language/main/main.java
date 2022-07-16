@@ -32,7 +32,6 @@ public class main extends JavaPlugin
 	public static Translation TRANSLATION;
 	public static SpielerService SPIELERSERVICE;
 	public static MessageService MESSAGESERVICE;
-	public static Settings SETTINGS;
 
 	/* ************************* */
 	/* ENABLE */
@@ -51,13 +50,13 @@ public class main extends JavaPlugin
 		PLUGIN = this;
 		
 		//	Überprüfen ob die Versions-Nummer stimmt...
-		boolean lb_continue = Sys.of_isSystemVersionCompatible(PLUGIN.getName(), "22.1.0.02", "plugins");
+		boolean lb_continue = Sys.of_isSystemVersionCompatible(PLUGIN.getName(), "22.1.0.03", "plugins");
 		
 		if(lb_continue) 
 		{
 			//	Settings-Variabel initialisieren für den Zugriff z.B. für die Überprüfung des Webservices!
-			SETTINGS = new Settings(Sys.of_getMainFilePath());
-			
+			Settings.of_getInstance().of_init(Sys.of_getMainFilePath());
+
 			Sys.of_debug("[WebService]: Send request to webservice...");
 			
 			//	WebService initialisieren...
@@ -78,7 +77,7 @@ public class main extends JavaPlugin
 			if(rc == 1) 
 			{
 				//	Settings laden...
-				rc = SETTINGS.of_load();
+				rc = Settings.of_getInstance().of_load();
 				
 				if(rc == 1) 
 				{
@@ -122,7 +121,7 @@ public class main extends JavaPlugin
 			SPIELERSERVICE.of_unload();
 		}
 
-		if(SETTINGS != null && SETTINGS.of_isUsingMySQL() && SQL != null && SQL.of_isConnected()) 
+		if(Settings.of_getInstance() != null && Settings.of_getInstance().of_isUsingMySQL() && SQL != null && SQL.of_isConnected()) 
 		{
 			SQL.of_closeConnection();
 		}
@@ -146,7 +145,7 @@ public class main extends JavaPlugin
 	private static void of_initSystemServices() 
 	{			
 		//	Das Objekt für die Übersetzungen initialisieren...
-		TRANSLATION = new Translation(SETTINGS.of_getChatDesign());
+		TRANSLATION = new Translation(Settings.of_getInstance().of_getChatDesign());
 		
 		//	SpielerService initialisieren...
 		SPIELERSERVICE = new SpielerService();
@@ -162,13 +161,13 @@ public class main extends JavaPlugin
 
 	/**
 	 * This function checks if external components are registered.
-	 * For example: if the SETTINGS-object is using the PlaceholderAPI this function
+	 * For example: if the Settings.of_getInstance()-object is using the PlaceholderAPI this function
 	 * checks if the plugin is on the server.
 	 */
 	private static void of_checkExternComponents() 
 	{
 		//	Schauen ob die PlaceholderAPI verwendet wird...
-		if(SETTINGS.of_isUsingPlaceholderAPI()) 
+		if(Settings.of_getInstance().of_isUsingPlaceholderAPI()) 
 		{
 			Sys.of_debug("Search for PlaceholderAPI on this server...");
 			
@@ -176,18 +175,18 @@ public class main extends JavaPlugin
 			if(Sys.of_check4SpecificPluginOnServer("PlaceholderAPI")) 
 			{
 				Sys.of_debug("...search complete! This server is using PlaceholderAPI (including Vault) :)");
-				SETTINGS.of_setUseVault(false);
+				Settings.of_getInstance().of_setUseVault(false);
 			}
 			else 
 			{
 				Sys.of_debug("...search complete! PlaceholderAPI is not on this server :/");
 				Sys.of_debug("Now we looking for: Vault (ignore settings.yml)");
-				SETTINGS.of_setUseVault(true);
+				Settings.of_getInstance().of_setUseVault(true);
 			}
 		}
 		
 		//	Vault-Objekt initialisieren, wenn VAULT vorhanden/gewünscht :)
-		if(SETTINGS.of_isUsingVault()) 
+		if(Settings.of_getInstance().of_isUsingVault()) 
 		{
 			Sys.of_debug("Search for Vault on this server...");
 			
@@ -201,7 +200,7 @@ public class main extends JavaPlugin
 			else 
 			{
 				Sys.of_debug("...search complete! Vault is not on this server :/");
-				SETTINGS.of_setUseVault(false);
+				Settings.of_getInstance().of_setUseVault(false);
 			}
 		}
 	}
@@ -236,7 +235,7 @@ public class main extends JavaPlugin
 		Sys.of_sendMessage("Developed by:");
 		Sys.of_sendMessage("»"+purple+" Nihar"+white);
 		Sys.of_sendMessage(blue+"▶ Settings:"+white);
-		SETTINGS.of_sendDebugDetailInformation();
+		Settings.of_getInstance().of_sendDebugDetailInformation();
 		Sys.of_sendMessage(blue+"▶ Webservice:"+white);
 		Sys.of_sendMessage("Connection: successfully");
 		Sys.of_sendMessage(blue+"▶ Message/Sound service:"+white);
@@ -244,6 +243,6 @@ public class main extends JavaPlugin
 		Sys.of_sendMessage("┗╋━━━━━━━━◥◣◆◢◤━━━━━━━━╋┛");
 		
 		//	Debug bzgl. den Sprachen ausgeben...
-		SETTINGS.of_sendDebug4Languages();
+		Settings.of_getInstance().of_sendDebug4Languages();
 	}
 }

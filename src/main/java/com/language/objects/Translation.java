@@ -61,12 +61,12 @@ public class Translation extends Objekt
 			String chatFormat = of_getChatDesign();
 			
 			//	Wenn die PlaceholderAPI verwendet wird...
-			if(main.SETTINGS.of_isUsingPlaceholderAPI())
+			if(Settings.of_getInstance().of_isUsingPlaceholderAPI())
 			{
 				chatFormat = PlaceholderAPI.setPlaceholders(p, chatFormat);
 			}
 			//	Schauen ob ggf. VAULT verwendet werden soll...
-			else if(main.SETTINGS.of_isUsingVault()) 
+			else if(Settings.of_getInstance().of_isUsingVault()) 
 			{
 				try
 				{
@@ -98,7 +98,7 @@ public class Translation extends Objekt
 			if(useTranslation) 
 			{
 				//	Gibt es mehrere Sprachen?
-				if(main.SETTINGS.of_isUsingSeparateChats())
+				if(Settings.of_getInstance().of_isUsingSeparateChats())
 				{
 					//	Sprache uebersetzen und in einem Array erhalten.
 					String[] translatedTexts = of_translateTextIntoAllSupportedLanguages(message, ps.of_getDefaultLanguage());
@@ -120,7 +120,7 @@ public class Translation extends Objekt
 				//	Keine Separaten Chats, ein Einheitlicher Chat in einer Sprache!
 				else 
 				{
-					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, main.SETTINGS.of_getDefaultLanguage4NoSeparateChats());
+					String translatedText = main.WEBSERVICE.of_getTranslatedTextByAutoSource(message, Settings.of_getInstance().of_getDefaultLanguage4NoSeparateChats());
 					translatedText = chatFormat.replace("%message%", translatedText);
 					
 					for(Spieler ds : players) 
@@ -158,7 +158,7 @@ public class Translation extends Objekt
 			
 			for(int i = 0; i < currentLanguages.length; i++) 
 			{
-				if(main.SETTINGS.of_isUsingTranslateEveryMessage2UserLanguage()) 
+				if(Settings.of_getInstance().of_isUsingTranslateEveryMessage2UserLanguage()) 
 				{
 					//	Jede Sprache automatisch in die derzeitige Sprache �bersetzen...
 					translatedTexts[i] = main.WEBSERVICE.of_getTranslatedTextByAutoSource(translateText, currentLanguages[i]);	
@@ -236,7 +236,7 @@ public class Translation extends Objekt
 	 */
 	public String of_languageIsSupported(String language)
 	{
-		HashMap<String, String> languages = main.SETTINGS.of_getSupportedLanguagesWithFullNames();
+		HashMap<String, String> languages = Settings.of_getInstance().of_getSupportedLanguagesWithFullNames();
 
 		//	Check the key-entries:
 		for(String key : languages.keySet())

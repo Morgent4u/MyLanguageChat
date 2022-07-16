@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.language.main.main;
+import com.language.objects.Settings;
 import com.language.sys.Sys;
 
 public class MySQL
@@ -134,7 +135,7 @@ public class MySQL
         		{
         			main.SQL.of_closeConnection();
         			main.SQL = null;
-        			main.SETTINGS.of_setUseMySQL(false);
+        			Settings.of_getInstance().of_setUseMySQL(false);
         			Sys.of_debug(instanzName+" There was an error by updating your database! Switch to the file-system (only for uptime)");
         		}
         	}

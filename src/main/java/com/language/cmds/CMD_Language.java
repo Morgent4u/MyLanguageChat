@@ -3,6 +3,7 @@ package com.language.cmds;
 import java.util.HashMap;
 
 import com.language.main.main;
+import com.language.objects.Settings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,7 +75,7 @@ public class CMD_Language implements CommandExecutor
 											String replacedText = message.replace("FORMAT=", "");
 
 											//	Alle Sprachen durchlaufen...
-											HashMap<String, String> languages = main.SETTINGS.of_getSupportedLanguagesWithFullNames();
+											HashMap<String, String> languages = Settings.of_getInstance().of_getSupportedLanguagesWithFullNames();
 
 											if (languages != null && languages.size() > 0)
 											{
@@ -111,14 +112,14 @@ public class CMD_Language implements CommandExecutor
 								{
 									String status = "§aenabled";
 									
-									if(main.SETTINGS.of_isUsingLanguage()) 
+									if(Settings.of_getInstance().of_isUsingLanguage()) 
 									{
-										main.SETTINGS.of_setPlugin(false);
+										Settings.of_getInstance().of_setPlugin(false);
 										status = "§cdisabled";
 									}
 									else 
 									{
-										main.SETTINGS.of_setPlugin(true);
+										Settings.of_getInstance().of_setPlugin(true);
 									}
 									
 									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: This pluing has been "+status+"§f.");
@@ -136,14 +137,14 @@ public class CMD_Language implements CommandExecutor
 								{
 									String status = "§aenabled";
 									
-									if(main.SETTINGS.of_isUsingTranslateEveryMessage2UserLanguage()) 
+									if(Settings.of_getInstance().of_isUsingTranslateEveryMessage2UserLanguage()) 
 									{
-										main.SETTINGS.of_setTranslateEveryMessage2DefaultUserLanguage(false);
+										Settings.of_getInstance().of_setTranslateEveryMessage2DefaultUserLanguage(false);
 										status = "§cdisabled";
 									}
 									else 
 									{
-										main.SETTINGS.of_setTranslateEveryMessage2DefaultUserLanguage(true);
+										Settings.of_getInstance().of_setTranslateEveryMessage2DefaultUserLanguage(true);
 									}
 									
 									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: Translate every message to the user language: "+status+"§f.");
@@ -186,7 +187,7 @@ public class CMD_Language implements CommandExecutor
 									if(displayLanguage != null)
 									{
 										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: Default-language has been changed to:§a " + displayLanguage);
-										main.SETTINGS.of_setDefaultLanguage(args[1].toLowerCase());
+										Settings.of_getInstance().of_setDefaultLanguage(args[1].toLowerCase());
 									}
 									else 
 									{
@@ -205,7 +206,7 @@ public class CMD_Language implements CommandExecutor
 								if(ps.of_hasSetupPermissions()) 
 								{
 									ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The translation-symbol has been changed to:§a " + args[1]);
-									main.SETTINGS.of_setTranslationSymbol(args[1]);
+									Settings.of_getInstance().of_setTranslationSymbol(args[1]);
 								}
 								else 
 								{
@@ -223,7 +224,7 @@ public class CMD_Language implements CommandExecutor
 									if(displayLanguage != null)
 									{
 										ps.of_getPlayer().sendMessage("§8[§aMyLanguage§fChat§8]§f: The global-language has been changed to:§a " + displayLanguage);
-										main.SETTINGS.of_setGlobalTranslateLanguage(args[1]);
+										Settings.of_getInstance().of_setGlobalTranslateLanguage(args[1]);
 									}
 									else
 									{
